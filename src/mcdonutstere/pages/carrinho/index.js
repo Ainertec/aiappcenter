@@ -29,7 +29,7 @@ import { useCart } from "../../contexts/cart";
 import { useAuth } from "../../contexts/auth";
 import { useAlert } from '../../contexts/alertN';
 import { useProgresso } from '../../contexts/prog';
-import { useValidation } from '../../validation/validation';
+import { useLojaOpen } from '../../contexts/openShop';
 import Carregando from '../../components/progress/carregando';
 import Api from "../../services/api";
 import Notification from '../../components/notificacao/notification';
@@ -97,7 +97,7 @@ function getStepContent(step, cartItems) {
           >
             Alteração ou cancelamento após a confirmação do pedido
             <br />
-            só poderá ser feito pelo Whatsapp número (21) 97579-8332.
+            só poderá ser feito pelo Whatsapp número (22) 22222-22222.
             <br />
             Obrigado pela compreensão!
           </Typography>
@@ -114,7 +114,7 @@ export default function TelaCarrinho() {
   const cabecario = getTitulos();
   const { setAbrir, setMsg } = useAlert();
   const { setProgresso } = useProgresso();
-  const { validaCampoNumber, validaCampoText } = useValidation()
+  const { lojaOpen } = useLojaOpen();
 
   const history = useHistory();
   function handleNavigateToPedidos() {
@@ -130,33 +130,28 @@ export default function TelaCarrinho() {
   };
 
   async function sendOrder() {
-    if (validaCampoText([note])) {
-      const items = cartItems.map((item) => {
-        return { product: item.product._id, quantity: item.quantity };
-      });
+    const items = cartItems.map((item) => {
+      return { product: item.product._id, quantity: item.quantity };
+    });
 
-      const order = {
-        user_id: user._id,
-        user_address_id: addressId != 0 ? addressId : undefined,
-        items,
-        payment,
-        source: "site",
-        note,
-      };
+    const order = {
+      user_id: user._id,
+      user_address_id: addressId != 0 ? addressId : undefined,
+      items,
+      payment,
+      source: "site",
+      note,
+    };
 
-      await setProgresso(true);
-      await Api.post('orders', order).then(response => {
-        console.log(response)
-        setMsg('Pedido criado com sucesso!');
-        setAbrir(true);
-        inicializarVariaveisCard();
-      });
-      await setProgresso(false);
-      await setTimeout(function () { handleNavigateToPedidos(); }, 500);
-    } else {
-      setMsg('Preencha o campo observação!');
+    await setProgresso(true);
+    await Api.post('orders', order).then(response => {
+      console.log(response)
+      setMsg('Pedido criado com sucesso!');
       setAbrir(true);
-    }
+      inicializarVariaveisCard();
+    });
+    await setProgresso(false);
+    await setTimeout(function () { handleNavigateToPedidos(); }, 500);
   }
 
   return (
@@ -218,51 +213,61 @@ export default function TelaCarrinho() {
                   )}
                 </Box>
                 <Box justifyContent="center" flexWrap="wrap" display="flex">
-                  {cartItems.length > 0 ? (
-                    posicaoNavegacao < cabecario.length ? (
-                      <>
-                        <Button
-                          disabled={posicaoNavegacao === 0}
-                          onClick={voltar}
-                          variant="contained"
-                        >
-                          <SkipPreviousIcon />
-                        Voltar
-                      </Button>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={continuar}
-                          style={{ marginLeft: 30 }}
-                        >
-                          {posicaoNavegacao === cabecario.length - 1 ? (
-                            <>
-                              <DoneOutlineIcon /> Fazer Pedido
-                          </>
-                          ) : (
+                  {lojaOpen ? (
+                    cartItems.length > 0 ? (
+                      posicaoNavegacao < cabecario.length ? (
+                        <>
+                          <Button
+                            disabled={posicaoNavegacao === 0}
+                            onClick={voltar}
+                            variant="contained"
+                          >
+                            <SkipPreviousIcon />
+                          Voltar
+                        </Button>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={continuar}
+                            style={{ marginLeft: 30 }}
+                          >
+                            {posicaoNavegacao === cabecario.length - 1 ? (
                               <>
-                                Continuar <SkipNextIcon />
-                              </>
-                            )}
-                        </Button>
+                                <DoneOutlineIcon /> Fazer Pedido
+                            </>
+                            ) : (
+                                <>
+                                  Continuar <SkipNextIcon />
+                                </>
+                              )}
+                          </Button>
+                        </>
+                      ) : (
+                          <Button
+                            disabled={posicaoNavegacao === 0}
+                            onClick={sendOrder}
+                            color="secondary"
+                            variant="contained"
+                          >
+                            <DoneAllIcon />
+                            Confirmar Pedido
+                          </Button>
+                        ))
+                      :
+                      <>
+                        <h3 style={{ textAlign: 'center' }}>
+                          <RemoveShoppingCartIcon />
+                          Nenhum item adicionado ao carrinho
+                          <MoodBadIcon />
+                        </h3>
                       </>
-                    ) : (
-                        <Button
-                          disabled={posicaoNavegacao === 0}
-                          onClick={sendOrder}
-                          color="secondary"
-                          variant="contained"
-                        >
-                          <DoneAllIcon />
-                          Confirmar Pedido
-                        </Button>
-                      ))
+                  )
                     :
                     <>
                       <h3 style={{ textAlign: 'center' }}>
                         <RemoveShoppingCartIcon />
-                        Nenhum item adicionado ao carrinho
-                        <MoodBadIcon />
+                          Não é possível efetuar pedidos, Loja fechada!
+                          <MoodBadIcon />
                       </h3>
                     </>
                   }

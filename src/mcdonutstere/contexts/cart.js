@@ -30,7 +30,7 @@ export const CartProvider = ({ children }) => {
   function updateQuantity(item, quantity) {
     const updateItem = {
       product: item,
-      quantity: quantity > 0 ? Number(quantity) : 1,
+      quantity: Number(quantity),
     };
     const itemIndex = cartItems.findIndex(
       (cartItem) => cartItem.product._id == item._id

@@ -13,7 +13,6 @@ import { useUser } from "../../contexts/user";
 import { useAlert } from '../../contexts/alertN';
 import { useHistory } from 'react-router-dom';
 import { useProgresso } from '../../contexts/prog';
-import { useValidation } from '../../validation/validation';
 import Carregando from '../../components/progress/carregando';
 import Notification from '../../components/notificacao/notification';
 import Api from '../../services/api';
@@ -50,44 +49,39 @@ export default function TelaDeCadastroCliente() {
   } = useUser();
   const { setAbrir, setMsg } = useAlert();
   const { setProgresso } = useProgresso();
-  const { validaCampoText } = useValidation();
   const history = useHistory();
 
   function handleNavigateToLogin() {
     history.push('/mcdonuts/login');
   };
 
-  async function notificacaoCadastroCliente(mensagem) {
-    await setMsg(mensagem)
+  async function notificacaoCadastroCliente() {
+    await setMsg('Cadastrado com sucesso!')
     await setAbrir(true);
+    handleNavigateToLogin();
   }
 
   async function cadastrarCliente() {
-    if (validaCampoText([name, username, password, response, question, phone])) {
-      const user = {
-        name,
-        username,
-        password,
-        response,
-        question,
-        phone: [phone],
-        address: userDistrict ? [{
-          district: userDistrict,
-          street,
-          number: addressNumber,
-          reference,
-        }] : undefined,
-      };
+    const user = {
+      name,
+      username,
+      password,
+      response,
+      question,
+      phone: [phone],
+      address: userDistrict ? [{
+        district: userDistrict,
+        street,
+        number: addressNumber,
+        reference,
+      }] : undefined,
+    };
 
-      await setProgresso(true);
-      await Api.post(`users`, user).then(response => {
-        notificacaoCadastroCliente('Cadastrado com sucesso!');
-      });
-      await setProgresso(false);
-      await handleNavigateToLogin();
-    } else {
-      notificacaoCadastroCliente('Preencha todos os dados do cliente! O endereço é opcional.');
-    }
+    await setProgresso(true);
+    await Api.post(`users`, user).then(response => {
+      notificacaoCadastroCliente();
+    });
+    await setProgresso(false);
 
   }
 

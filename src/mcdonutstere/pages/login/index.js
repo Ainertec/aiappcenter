@@ -19,7 +19,6 @@ import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth';
 import { useAlert } from '../../contexts/alertN';
 import { useProgresso } from '../../contexts/prog';
-import { useValidation } from '../../validation/validation';
 import Carregando from '../../components/progress/carregando';
 
 import Navbar from "../../components/navbar/navbar";
@@ -67,7 +66,6 @@ function TelaLogin() {
     const { signIn } = useAuth();
     const { setAbrir, setMsg } = useAlert();
     const { setProgresso } = useProgresso();
-    const { validaCampoText } = useValidation();
 
     const classes = useStyles();
 
@@ -82,17 +80,13 @@ function TelaLogin() {
     }
 
     async function hanldleLogin() {
-        if (validaCampoText([name, password])) {
-            await setProgresso(true)
-            const result = await signIn({ name, password });
-            await setProgresso(false)
-            if (result == 200) {
-                notificacaodeLogin('Login efetuado com sucesso!');
-            } else {
-                notificacaodeLogin('Usuário ou senha incorretos!');
-            }
+        await setProgresso(true)
+        const result = await signIn({ name, password });
+        await setProgresso(false)
+        if (result == 200) {
+            notificacaodeLogin('Login efetuado com sucesso!');
         } else {
-            notificacaodeLogin('Preencha todos os campos!');
+            notificacaodeLogin('Usuário ou senha incorretos!');
         }
     }
 
@@ -159,7 +153,7 @@ function TelaLogin() {
                                 <Botao variant="text" name="Esqueceu a senha?" color="primary" onClick={handleAbrirRecuperarSenha} />
                             </Grid>
                         </div>
-                        <p style={{ color: "red" }}>Caso precise de ajuda para acessar seu login, entre em contato pelo whatsapp número: (21) 97579-8332.</p>
+                        <p style={{ color: "red" }}>Caso precise de ajuda para acessar seu login, entre em contato pelo whatsapp número: (22) 22222-2222.</p>
                     </Grid>
                 </Box>
                 <div>

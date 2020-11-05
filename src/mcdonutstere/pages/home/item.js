@@ -23,7 +23,6 @@ const useStyles = makeStyles({
   precoestilo: {
     backgroundColor: "#880016",
     color: "#fff",
-    marginBottom: 0,
   },
   botaoestilo: {
     borderRadius: 30,

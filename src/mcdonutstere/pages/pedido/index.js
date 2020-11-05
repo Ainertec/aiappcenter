@@ -81,7 +81,7 @@ export default function TelaPedido() {
                     }
                     <h4 style={{ textAlign: 'center', color: 'red' }}>
                         Atenção se seu pedido não estiver aparecendo pode ser que ele tenha sido cancelado pelo vendedor,
-                        para mais informações entre em contato pelo Whatsapp número: (21) 97579-8332.
+                        para mais informações entre em contato pelo Whatsapp número: (22)22222222.
                         <br />
                         Obrigado pela compreensão!
                     </h4>

@@ -11,8 +11,8 @@ export const UserProvider = ({ children }) => {
     const [phone, setPhone] = useState();
     const [userDistrict, setUserDistrict] = useState();
     const [street, setStreet] = useState();
-    const [addressNumber, setAddressNumber] = useState('0');
-    const [reference, setReference] = useState('Nenhuma');
+    const [addressNumber, setAddressNumber] = useState();
+    const [reference, setReference] = useState();
 
     function iniciarVariaveisUser() {
         setName();
@@ -23,8 +23,8 @@ export const UserProvider = ({ children }) => {
         setPhone();
         setUserDistrict();
         setStreet();
-        setAddressNumber('0');
-        setReference('Nenhuma');
+        setAddressNumber();
+        setReference();
     }
 
     return (
