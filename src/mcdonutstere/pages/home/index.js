@@ -45,7 +45,7 @@ export default function Home() {
   const { setProgresso } = useProgresso();
   const { setLojaOpen } = useLojaOpen();
 
-  const socket = useMemo(() => socketio(`http://localhost:3333`), []);
+  const socket = useMemo(() => socketio(`https://requestaiappcenter.herokuapp.com/`), []);
 
   useEffect(() => {
     socket.on('shop', (data) => {
