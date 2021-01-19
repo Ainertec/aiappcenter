@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import HomeNutriJacque from "../pages/home/index";
 import ItemNutriJacque from "../pages/item/index";
 import LoginNutriJacque from "../pages/login/index";
+import ControleNutriJacque from "../pages/controle/index";
 //import Carrinho from "../pages/carrinho/index";
 //import { useAuth } from "../contexts/auth";
 //import Carrinho from "../pages/carrinho/index";
@@ -41,6 +42,7 @@ function rotas() {
       <Route path="/nutricionistajacquelinethedim" exact component={HomeNutriJacque} />
       <Route path="/nutricionistajacquelinethedim/item" component={ItemNutriJacque} />
       <Route path="/nutricionistajacquelinethedim/login" component={LoginNutriJacque} />
+      <Route path="/nutricionistajacquelinethedim/controle" component={ControleNutriJacque} />
     </Switch>
   );
 }
