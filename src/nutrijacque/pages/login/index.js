@@ -8,6 +8,7 @@ import {
     Row,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useHistory } from "react-router-dom";
 
 import SecurityIcon from '@material-ui/icons/Security';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
@@ -15,6 +16,12 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import NavBar from './navbar';
 
 export default function Login() {
+    const history = useHistory();
+    const handleToControl = () => {
+        alert('Bem vindo a área do administrador!')
+        history.push("/nutricionistajacquelinethedim/controle");
+    };
+    
     return (
         <div>
             <NavBar />
@@ -35,7 +42,7 @@ export default function Login() {
                                     <Form.Label>Senha</Form.Label>
                                     <Form.Control type="password" placeholder="Entre com a senha." />
                                 </Form.Group>
-                                <Button onClick={() => { alert('Aqui vc será direcionado para o controle do sistema. ;)') }} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="primary" size="lg" block>
+                                <Button onClick={handleToControl} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="primary" size="lg" block>
                                     <VpnKeyIcon /> Entrar
                                 </Button>
                             </Form>

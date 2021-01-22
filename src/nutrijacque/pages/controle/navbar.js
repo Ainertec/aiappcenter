@@ -6,12 +6,12 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory } from "react-router-dom";
 
-import SecurityIcon from '@material-ui/icons/Security';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 export default function NavBar() {
     const history = useHistory();
-    const handleToLogin = () => {
-        history.push("/nutricionistajacquelinethedim/login");
+    const handleToHome = () => {
+        history.push("/nutricionistajacquelinethedim/");
     };
     return (
         <Navbar collapseOnSelect expand="lg" bg="info" variant="dark" style={{ borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}>
@@ -27,7 +27,7 @@ export default function NavBar() {
 
                 </Nav>
                 <Nav>
-                    <Nav.Link href="#" onClick={handleToLogin}><SecurityIcon /> Área do administrador</Nav.Link>
+                    <Nav.Link href="#" onClick={handleToHome}><ExitToAppIcon /> Sair</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

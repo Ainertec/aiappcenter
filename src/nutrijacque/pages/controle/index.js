@@ -8,6 +8,8 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import NavBar from './navbar';
+import CreateCategory from './categoria/cadastrar';
+import CreateIten from './item/cadastrar';
 
 export default function Control() {
     const [posicaoMenu, setMenu] = useState(0);
@@ -39,10 +41,10 @@ export default function Control() {
                         </ListGroup>
                     </Col>
                     <Col>
-                        <main style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', borderRadius:15, height:'80vh', padding:'3vw', marginTop:'2vh'}}>
-                            {posicaoMenu == 0 && <>Teste</>}
+                        <main style={{marginTop:'5vh'}}>
+                            {posicaoMenu == 0 && <CreateCategory/>}
                             {posicaoMenu == 1 && <>Teste1</>}
-                            {posicaoMenu == 2 && <>Teste2</>}
+                            {posicaoMenu == 2 && <CreateIten/>}
                             {posicaoMenu == 3 && <>Teste3</>}
                         </main>
                     </Col>
