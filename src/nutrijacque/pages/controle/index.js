@@ -8,8 +8,15 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import NavBar from './navbar';
-import CreateCategory from './categoria/cadastrar';
-import CreateIten from './item/cadastrar';
+import CreateCategory from './categoria';
+import CreateIten from './item';
+
+import BuildIcon from '@material-ui/icons/Build';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+
 
 export default function Control() {
     const [posicaoMenu, setMenu] = useState(0);
@@ -27,16 +34,19 @@ export default function Control() {
                         <h3 style={{textAlign:'center', marginTop: '5vh'}}>Menu</h3>
                         <ListGroup>
                             <ListGroup.Item action onClick={() => menu(0)}>
-                                Criar categoria
+                                <PlaylistAddIcon /> Criar categoria
                             </ListGroup.Item>
                             <ListGroup.Item action onClick={() => menu(1)}>
-                                Opçoes de categoria
+                                <ListAltIcon /> Opções de categoria
                             </ListGroup.Item>
                             <ListGroup.Item action onClick={() => menu(2)}>
-                                Criar item
+                                <AddShoppingCartIcon /> Criar item
                             </ListGroup.Item>
                             <ListGroup.Item action onClick={() => menu(3)}>
-                                Opçoes de item
+                                <ShoppingCartIcon /> Opções de item
+                            </ListGroup.Item>
+                            <ListGroup.Item action onClick={() => menu(4)}>
+                                <BuildIcon /> Opções de conta
                             </ListGroup.Item>
                         </ListGroup>
                     </Col>
@@ -46,6 +56,7 @@ export default function Control() {
                             {posicaoMenu == 1 && <>Teste1</>}
                             {posicaoMenu == 2 && <CreateIten/>}
                             {posicaoMenu == 3 && <>Teste3</>}
+                            {posicaoMenu == 4 && <>Teste4</>}
                         </main>
                     </Col>
                 </Row>

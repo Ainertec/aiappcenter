@@ -1,6 +1,8 @@
 import React from "react";
 
 import RotaNutriJacque from "./index";
+import { CategoryProvider } from "../contexts/category";
+import { ItemProvider } from "../contexts/item";
 //import { AuthProvider } from "../contexts/auth";
 //import { CartProvider } from "../contexts/cart";
 //import { AlertProvider } from "../contexts/alertN";
@@ -11,7 +13,11 @@ import RotaNutriJacque from "./index";
 
 export default function RotasMcDonuts() {
     return (
-        <RotaNutriJacque />
+        <CategoryProvider>
+            <ItemProvider>
+                <RotaNutriJacque />
+            </ItemProvider>
+        </CategoryProvider>
     );
 }
 

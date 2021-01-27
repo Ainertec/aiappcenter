@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Row,
     Col,
@@ -11,6 +11,9 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import Api from "../../../services/api";
+import { useItem } from "../../../contexts/item";
+
 
 import DescriptionIcon from '@material-ui/icons/Description';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -18,35 +21,76 @@ import CommentIcon from '@material-ui/icons/Comment';
 
 
 export default function CreateIten() {
-    const [fotoCapa, setFotoCapa] = useState('');
-    const [nome, setNome] = useState('');
-    const [categoria, setCategoria] = useState('Cursos');
-    const [preco, setPreco] = useState(0.00);
-    const [linkPagamento, setLinkPagemento] = useState('');
-    const [descricao, setDescricao] = useState('');
-    const [linkVideo, setLinkVideo] = useState('');
+    const [categorys, setCategorys] = useState([]);
+    const [ idCategoria, setIdCategoria] = useState('');
+    const {
+        fotoCapa,
+        setFotoCapa,
+        nome,
+        setNome,
+        preco,
+        setPreco,
+        linkPagamento,
+        setLinkPagamento,
+        descricao,
+        setDescricao,
+        linkVideo,
+        setLinkVideo,
+        iniciarVariaveisItem
+    } = useItem();
 
-    function novaFotoCapa(entradaDeFoto){
-        setFotoCapa(entradaDeFoto);
+
+    async function cadastrarItem() {
+        const item = {
+            name:nome,
+            photo:fotoCapa,
+            linkpagament:linkPagamento,
+            description:descricao,
+            price:preco,
+            linkvideo:linkVideo,
+            comments: []
+        };
+    
+        //await setProgresso(true);
+        await Api.post(`items`, item).then(response => {
+            //notificacaoCadastroCliente();
+            adicionarItemNaCategoria(response.data._id);
+        });
+        //await setProgresso(false);
     }
-    function novoNome(entradaDeNome){
-        setNome(entradaDeNome);
+
+    async function adicionarItemNaCategoria(id) {
+        let categoriaAtualizada = null, vetorDeItens = [];
+        categorys.map((option) => (
+            option._id == idCategoria ? categoriaAtualizada = option : null
+        ));
+
+        categoriaAtualizada._id = undefined;
+        categoriaAtualizada.createdAt = undefined;
+        categoriaAtualizada.updatedAt = undefined;
+        categoriaAtualizada.__v = undefined;
+        vetorDeItens.push(id);
+        categoriaAtualizada.items.map((option) => (
+            vetorDeItens.push(option._id)
+        ));
+        categoriaAtualizada.items = vetorDeItens;
+
+        //await setProgresso(true);
+        await Api.put(`categorys/${idCategoria}`, categoriaAtualizada).then(response => {
+            //notificacaoCadastroCliente();
+        });
+        //await setProgresso(false);
     }
-    function novaCategoria(entradaDeCategoria){
-        setCategoria(entradaDeCategoria);
-    }
-    function novoPreco(entradaDePreco){
-        setPreco(entradaDePreco);
-    }
-    function novoLinkPagamento(entradaDePagamento){
-        setLinkPagemento(entradaDePagamento);
-    }
-    function novaDescricao(entradaDeDescricao){
-        setDescricao(entradaDeDescricao);
-    }
-    function novaLinkVideo(entradaDeVideo){
-        setLinkVideo(entradaDeVideo);
-    }
+    
+    useEffect(() => {
+        iniciarVariaveisItem()
+    }, []);
+
+    useEffect(() => {
+        Api.get('categorys').then(response => {
+            setCategorys(response.data);
+        });
+    }, []);
 
     return (
         <Container fluid>
@@ -56,36 +100,38 @@ export default function CreateIten() {
                     <Form>
                         <Form.Group controlId="fotocapa">
                             <Form.Label>Link Foto:</Form.Label>
-                            <Form.Control placeholder="Exemplo: https://google.fotos/minhaimagem" onChange={(event) => novaFotoCapa(event.target.value)}/>
+                            <Form.Control placeholder="Exemplo: https://google.fotos/minhaimagem" onChange={(event) => setFotoCapa(event.target.value)}/>
                         </Form.Group>
                         <Form.Group controlId="nome">
                             <Form.Label>Nome:</Form.Label>
-                            <Form.Control placeholder="Exemplo: Curso de emagrecimento" onChange={(event) => novoNome(event.target.value)}/>
+                            <Form.Control placeholder="Exemplo: Curso de emagrecimento" onChange={(event) => setNome(event.target.value)}/>
                         </Form.Group>
                         <Form.Group controlId="Categoria">
                             <Form.Label>Categoria:</Form.Label>
                             <Form.Control as="select" multiple>
-                                <option onClick={(event)=> novaCategoria(event.target.value)} value='Cursos'>Cursos</option>
-                                <option onClick={(event)=> novaCategoria(event.target.value)} value='Ebooks'>Ebooks</option>
+                            {categorys.map((option) => (
+                                <option key={option._id} onClick={(event)=> setIdCategoria(event.target.value)} value={option._id}>{option.name}</option>
+                            ))}
+                            
                             </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="preco">
                             <Form.Label>Preço:</Form.Label>
-                            <Form.Control placeholder="" type="number" onChange={(event) => novoPreco(event.target.value)}/>
+                            <Form.Control placeholder="" type="number" onChange={(event) => setPreco(event.target.value)}/>
                         </Form.Group>
                         <Form.Group controlId="linkpagamento">
                             <Form.Label>Link pagamento:</Form.Label>
-                            <Form.Control placeholder="Exemplo: https://meupagamento.com" onChange={(event) => novoLinkPagamento(event.target.value)}/>
+                            <Form.Control placeholder="Exemplo: https://meupagamento.com" onChange={(event) => setLinkPagamento(event.target.value)}/>
                         </Form.Group>
                         <Form.Group controlId="descricao">
                             <Form.Label>Descrição</Form.Label>
-                            <Form.Control as="textarea" rows={3} onChange={(event) => novaDescricao(event.target.value)} />
+                            <Form.Control as="textarea" rows={3} onChange={(event) => setDescricao(event.target.value)} />
                         </Form.Group>
                         <Form.Group controlId="linkvideo">
                             <Form.Label>Link vídeo:</Form.Label>
-                            <Form.Control placeholder="Exemplo: https://youtube.com/meuvideo" onChange={(event) => novaLinkVideo(event.target.value)}/>
+                            <Form.Control placeholder="Exemplo: https://youtube.com/meuvideo" onChange={(event) => setLinkVideo(event.target.value)}/>
                         </Form.Group>
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" onClick={cadastrarItem}>
                             Criar
                         </Button>
                     </Form>
@@ -100,7 +146,7 @@ export default function CreateIten() {
                             />
                             <Media.Body className="mr-3">
                                 <h5 style={{ marginBottom: '5vh' }}><u>{nome}</u></h5>
-                                <p>Categoria: {categoria}</p>
+                                <p>Categoria: {idCategoria}</p>
                                 <p>Criado em: 0000-00-00</p>
                                 <h3 style={{ color: 'red', marginBottom: '5vh' }}>R${(parseFloat(preco)).toFixed(2)}</h3>
                                 <Button onClick={() => { alert('Aqui vc será direcionado para o pagamento!(integração com o link do outro sistema.)') }} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="warning" size="lg" block>

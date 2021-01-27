@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect }  from "react";
 import {
     Image,
     Row,
@@ -8,37 +8,45 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import Api from "../../services/api";
+
 import NavBar from './navbar';
 import Carrousel from './carousel';
 import CardItem from './card';
 import FooterHome from './footer';
 
 export default function Home() {
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        Api.get('categorys').then(response => {
+            setItems(response.data);
+        });
+    }, []);
+
+
     return (
         <div>
             <NavBar />
             <Container fluid>
                 <Carrousel />
                 <div style={{ marginBottom: '5vh', marginTop: '10vh', marginRight: '10vw', marginLeft: '10vw' }}>
-                    <h3 style={{ textAlign: 'center', marginTop: '4vh' }}>Cursos</h3>
-                    <hr />
-                    <CardDeck>
-                        <CardItem />
-                        <CardItem />
-                        <CardItem />
-                    </CardDeck>
-                    <h3 style={{ textAlign: 'center', marginTop: '4vh' }}>Ebooks</h3>
-                    <hr />
-                    <CardDeck>
-                        <CardItem />
-                        <CardItem />
-                        <CardItem />
-                    </CardDeck>
+                    {items.map((option) =>(
+                        <>
+                            <h3 style={{ textAlign: 'center', marginTop: '4vh' }}>{option.name}</h3>
+                            <hr />
+                            <CardDeck>
+                                {option.items.map((option2) => ( 
+                                        <CardItem dado={option2} />
+                                ))}
+                            </CardDeck>
+                        </>
+                    ))}
                 </div>
                 <Card>
-                    <Card.Body style={{ opacity: 0.8, backgroundRepeat: 'no-repeat', backgroundSize: '100vw', backgroundImage: 'url("https://scontent-gig2-1.xx.fbcdn.net/v/t1.0-9/64747668_2874961069394995_8285739337077751808_n.png?_nc_cat=103&ccb=2&_nc_sid=dd9801&_nc_ohc=1KZTX9KpBBcAX9wEZ6R&_nc_ht=scontent-gig2-1.xx&oh=13f3b9eb2facf147cc495a0ec24d3c55&oe=600D7A13")' }}>
+                    <Card.Body style={{ opacity: 0.8, backgroundRepeat: 'no-repeat', backgroundSize: '100vw', backgroundImage: 'url("https://i.ibb.co/8m40M4w/64747668-2874961069394995-8285739337077751808-n.png")' }}>
                         <Row className="justify-content-center">
-                            <Image style={{ opacity: 1, width: '18vw', marginTop: '8vh', borderRadius: 20, boxShadow: "5px 5px 5px black" }} src="https://scontent-gig2-1.xx.fbcdn.net/v/t1.0-9/s960x960/133115937_3426915024199594_7142885507613308075_o.jpg?_nc_cat=106&ccb=2&_nc_sid=9e2e56&_nc_ohc=t7FeOQnshQQAX8cXERw&_nc_ht=scontent-gig2-1.xx&tp=7&oh=a059344058696b09eae6609c1ba02fec&oe=600CDB1B" />
+                            <Image style={{ opacity: 1, width: '18vw', marginTop: '8vh', borderRadius: 20, boxShadow: "5px 5px 5px black" }} src="https://i.ibb.co/xspvVhk/133115937-3426915024199594-7142885507613308075-o.jpg" />
                         </Row>
                         <div style={{ padding: '1vw', backgroundColor: '#000', borderRadius: 20, marginTop: '2vh', }}>
                             <h5 style={{ textAlign: "center", marginBottom: '5vh', color: '#FFF' }}>Jacqueline Thedim</h5>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import {
     Row,
     Col,
@@ -8,12 +8,35 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default function CreateCategory() {
-    const [nome, setNome] = useState('');
+import Api from "../../../services/api";
+import { useCategory } from "../../../contexts/category";
 
-    function novoNome(entradaDeNome){
-        setNome(entradaDeNome);
+export default function CreateCategory() {
+    const {
+        name,
+        setName,
+        iniciarVariavelCategory,
+    } = useCategory();
+
+
+    async function cadastrarCategoria() {
+        const category = {
+          name,
+          items:[]
+        };
+    
+        //await setProgresso(true);
+        await Api.post(`categorys`, category).then(response => {
+          //notificacaoCadastroCliente();
+        });
+        //await setProgresso(false);
+    
     }
+    
+    useEffect(() => {
+        iniciarVariavelCategory()
+    }, []);
+
 
     return (
         <Container fluid>
@@ -23,15 +46,15 @@ export default function CreateCategory() {
                     <Form>
                         <Form.Group controlId="nome">
                             <Form.Label>Nome:</Form.Label>
-                            <Form.Control placeholder="Exemplo: Cursos" onChange={(event) => novoNome(event.target.value)}/>
+                            <Form.Control placeholder="Exemplo: Cursos" onChange={(event) => setName(event.target.value)}/>
                         </Form.Group>
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" onClick={cadastrarCategoria}>
                             Criar
                         </Button>
                     </Form>
                 </Col>
                 <Col xs={7} style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', height:'80vh'}}>
-                    <h3 style={{ textAlign: 'center', marginTop: '4vh' }}>{nome}</h3>
+                    <h3 style={{ textAlign: 'center', marginTop: '4vh' }}>{name}</h3>
                     <hr />
                 </Col>
             </Row>
