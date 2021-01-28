@@ -33,11 +33,11 @@ export default function Home() {
                 <div style={{ marginBottom: '5vh', marginTop: '10vh', marginRight: '10vw', marginLeft: '10vw' }}>
                     {items.map((option) =>(
                         <>
-                            <h3 style={{ textAlign: 'center', marginTop: '4vh' }}>{option.name}</h3>
+                            <h3 style={{ textAlign: 'center', marginTop: '10vh' }}>{option.name}</h3>
                             <hr />
                             <CardDeck>
                                 {option.items.map((option2) => ( 
-                                        <CardItem dado={option2} />
+                                        <CardItem dado={option2} key={option2._id}/>
                                 ))}
                             </CardDeck>
                         </>

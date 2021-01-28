@@ -9,6 +9,8 @@ export const ItemProvider = ({ children }) => {
     const [linkPagamento, setLinkPagamento] = useState('');
     const [descricao, setDescricao] = useState('');
     const [linkVideo, setLinkVideo] = useState('');
+    const [categoria, setCategoria] = useState('');
+    const [createdAt, setCreatedAt] = useState('');
 
     function iniciarVariaveisItem() {
         setFotoCapa();
@@ -17,6 +19,8 @@ export const ItemProvider = ({ children }) => {
         setLinkPagamento();
         setDescricao();
         setLinkVideo();
+        setCategoria();
+        setCreatedAt();
     }
 
     return (
@@ -34,6 +38,10 @@ export const ItemProvider = ({ children }) => {
                 setDescricao,
                 linkVideo,
                 setLinkVideo,
+                categoria,
+                setCategoria,
+                createdAt,
+                setCreatedAt,
                 iniciarVariaveisItem
             }}
         >

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     Container,
     Media,
@@ -14,8 +14,20 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CommentIcon from '@material-ui/icons/Comment';
 
 import NavBar from './navbar';
+import { useItem } from "../../contexts/item";
 
 export default function ItemSelected() {
+    const {
+        fotoCapa,
+        nome,
+        preco,
+        linkPagamento,
+        descricao,
+        linkVideo,
+        categoria,
+        createdAt,
+    } = useItem();
+
     return (
         <div>
             <NavBar />
@@ -24,14 +36,14 @@ export default function ItemSelected() {
                     <img
                         style={{ width: '20vw', borderRadius: 10 }}
                         className="mr-3"
-                        src="https://i.ibb.co/wrDtZ1d/download-1.jpg"
+                        src={fotoCapa}
                     />
                     <Media.Body className="mr-3">
-                        <h5 style={{ marginBottom: '5vh' }}><u>Novo Curso de Emagrecimento</u></h5>
-                        <p>Categoria: Curso</p>
-                        <p>Criado em: 2020-02-23</p>
-                        <h3 style={{ color: 'red', marginBottom: '5vh' }}>R$250.00</h3>
-                        <Button onClick={() => { alert('Aqui vc será direcionado para o pagamento!(integração com o link do outro sistema.)') }} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="warning" size="lg" block>
+                        <h5 style={{ marginBottom: '5vh' }}><u>{nome}</u></h5>
+                        <p>Categoria: {categoria}</p>
+                        <p>Criado em: {createdAt}</p>
+                        <h3 style={{ color: 'red', marginBottom: '5vh' }}>R${(parseFloat(preco)).toFixed(2)}</h3>
+                        <Button onClick={() => { alert(`Aqui vc será direcionado para o pagamento no link${linkPagamento}`) }} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="warning" size="lg" block>
                             <ShoppingCartIcon /> Comprar
                         </Button>
                     </Media.Body>
@@ -40,23 +52,8 @@ export default function ItemSelected() {
                     <Card.Header><DescriptionIcon /> Descrição</Card.Header>
                     <Card.Body>
                         <Card.Text style={{ textAlign: 'center' }}>
-                            Some quick example text to build on the card title and make up the bulk
-                            of the card's content.
-                            Some quick example text to build on the card title and make up the bulk
-                            of the card's content.
-                            Some quick example text to build on the card title and make up the bulk
-                            of the card's content.
-                            Some quick example text to build on the card title and make up the bulk
-                            of the card's content.
-                            Some quick example text to build on the card title and make up the bulk
-                            of the card's content.
-                            Some quick example text to build on the card title and make up the bulk
-                            of the card's content.
-                            Some quick example text to build on the card title and make up the bulk
-                            of the card's content.
-                            Some quick example text to build on the card title and make up the bulk
-                            of the card's content.
-                    </Card.Text>
+                            {descricao}
+                        </Card.Text>
                     </Card.Body>
                 </Card>
                 <Row border="secondary" className="justify-content-center" style={{ marginRight: '10vw', marginLeft: '10vw', marginTop: '5vh', borderRadius: 10 }}>
@@ -65,7 +62,7 @@ export default function ItemSelected() {
                         height: '50vh',
                         borderRadius: 10,
                         allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    }} src="https://www.youtube.com/embed/-3s_YFDXHNY" />
+                    }} src={linkVideo} />
                 </Row>
                 <Accordion defaultActiveKey="0" style={{ marginRight: '10vw', marginLeft: '10vw', marginTop: '5vh', borderRadius: 10, marginBottom: '10vh' }} >
                     <Card border="info">
