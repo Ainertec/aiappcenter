@@ -5,13 +5,18 @@ import {
     Card,
     Button,
     Accordion,
-    Row
+    Row,
+    Col,
+    InputGroup,
+    FormControl
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import DescriptionIcon from '@material-ui/icons/Description';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CommentIcon from '@material-ui/icons/Comment';
+import SmsIcon from '@material-ui/icons/Sms';
+import SendIcon from '@material-ui/icons/Send';
 
 import NavBar from './navbar';
 import { useItem } from "../../contexts/item";
@@ -85,6 +90,21 @@ export default function ItemSelected() {
                                 <p>"Hello! I'm another body"</p>
                                 <h6>Aldair</h6>
                                 <p>"Hello! I'm another body"</p>
+                                <hr/>
+                                <p style={{backgroundColor:'rgba(0,0,0,0.1)', borderRadius:20}}>
+                                    <Row>
+                                        <Col md={{ span: 6, offset: 3 }}>
+                                            <SmsIcon />
+                                            <InputGroup md={{ span: 6, offset: 3 }} className="mb-3">
+                                                <FormControl placeholder="Nome" />
+                                                <FormControl placeholder="Comentário" />
+                                                <InputGroup.Append>
+                                                    <Button variant="info" size="sm"><SendIcon /> Enviar</Button>
+                                                </InputGroup.Append>
+                                            </InputGroup>
+                                        </Col>
+                                    </Row>
+                                </p>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>

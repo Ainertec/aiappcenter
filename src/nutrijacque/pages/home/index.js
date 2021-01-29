@@ -3,10 +3,11 @@ import {
     Image,
     Row,
     Container,
-    CardDeck,
+    CardColumns,
     Card,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useBuscaItem } from "../../contexts/buscaItem";
 
 import Api from "../../services/api";
 
@@ -16,14 +17,18 @@ import CardItem from './card';
 import FooterHome from './footer';
 
 export default function Home() {
-    const [items, setItems] = useState([]);
+    const {
+        items,
+        setItems,
+        iniciarVariavelBuscaItem
+    } = useBuscaItem();
 
     useEffect(() => {
+        iniciarVariavelBuscaItem();
         Api.get('categorys').then(response => {
             setItems(response.data);
         });
     }, []);
-
 
     return (
         <div>
@@ -31,17 +36,20 @@ export default function Home() {
             <Container fluid>
                 <Carrousel />
                 <div style={{ marginBottom: '5vh', marginTop: '10vh', marginRight: '10vw', marginLeft: '10vw' }}>
-                    {items.map((option) =>(
-                        <>
-                            <h3 style={{ textAlign: 'center', marginTop: '10vh' }}>{option.name}</h3>
-                            <hr />
-                            <CardDeck>
-                                {option.items.map((option2) => ( 
-                                        <CardItem dado={option2} key={option2._id}/>
-                                ))}
-                            </CardDeck>
-                        </>
-                    ))}
+                    {
+                        items.map((option) =>(
+                            <>
+                                <h3 style={{ textAlign: 'center', marginTop: '10vh' }}>{option.name}</h3>
+                                <hr />
+                                <CardColumns>
+                                    {option.items.map((option2) => ( 
+                                            <CardItem dado={option2} key={option2._id}/>
+                                    ))}
+                                </CardColumns>
+                            </>
+                        ))
+                    }
+                    {console.log(items[0])}
                     {
                         items[0]? null:<h5>Não existe produtos!</h5>
                     }

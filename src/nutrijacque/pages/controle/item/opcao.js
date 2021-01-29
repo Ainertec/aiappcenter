@@ -22,7 +22,7 @@ export default function ListIten() {
             <h4 style={{textAlign:'center', marginBottom:'3vh'}}>Listagem de produtos</h4>
             <Row>
                 <Col xs={12} style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', height:'75vh', boxShadow: "5px 5px 5px black", padding:'3vh', marginRight:'2vw', position:'relative', zIndex:1, overflow:'scroll'}}>
-                    <Col  md={{ span: 6, offset: 3 }}>
+                    <Col md={{ span: 6, offset: 3 }}>
                         <InputGroup>
                             <FormControl
                                 placeholder="Exemplo: curso de emagrecimento"

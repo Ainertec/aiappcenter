@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import PhoneIcon from '@material-ui/icons/Phone';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 
 
 export default function FooterHome() {
@@ -22,12 +23,12 @@ export default function FooterHome() {
                 <h4> Jacqueline Thedim</h4>
             </Row>
             <Row className="justify-content-center">
-                <p><MailOutlineIcon /> Email: jacque@teste.com</p>
+                <p><MailOutlineIcon /> Email: nutricionistajacquelinethedim@hotmail.com</p>
             </Row>
             <Row className="justify-content-center">
-                <p><PhoneIcon /> Tel.:(22)22222-2222</p>
+                <p><PhoneIcon /> Tel.:(22) 99836-1425 <WhatsAppIcon /></p>
             </Row>
-            <Row className="justify-content-center">
+            <Row className="justify-content-center" style={{backgroundColor:'rgba(0, 0, 0, 0.6)', borderRadius:30}}>
                 <div style={{ marginRight: '10vw', marginLeft: '10vw' }} className="blockquote-footer">
                     <a href="#">
                         <cite>Ainertec</cite>

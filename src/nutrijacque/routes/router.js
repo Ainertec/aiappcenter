@@ -3,6 +3,7 @@ import React from "react";
 import RotaNutriJacque from "./index";
 import { CategoryProvider } from "../contexts/category";
 import { ItemProvider } from "../contexts/item";
+import { BuscaItemProvider } from "../contexts/buscaItem";
 //import { AuthProvider } from "../contexts/auth";
 //import { CartProvider } from "../contexts/cart";
 //import { AlertProvider } from "../contexts/alertN";
@@ -15,7 +16,9 @@ export default function RotasMcDonuts() {
     return (
         <CategoryProvider>
             <ItemProvider>
-                <RotaNutriJacque />
+                <BuscaItemProvider>
+                    <RotaNutriJacque />
+                </BuscaItemProvider>
             </ItemProvider>
         </CategoryProvider>
     );
