@@ -131,8 +131,14 @@ export default function CreateIten() {
                             <Form.Label>Link vídeo:</Form.Label>
                             <Form.Control placeholder="Exemplo: https://youtube.com/meuvideo" onChange={(event) => setLinkVideo(event.target.value)}/>
                         </Form.Group>
-                        <Button variant="primary" onClick={cadastrarItem}>
+                        <Button style={{margin:'2px'}} variant="primary" onClick={cadastrarItem}>
                             Criar
+                        </Button>
+                        <Button style={{margin:'2px'}} variant="info" >
+                            Atualizar
+                        </Button>
+                        <Button style={{margin:'2px'}} variant="outline-danger" >
+                            Excluir
                         </Button>
                     </Form>
                 </Col>

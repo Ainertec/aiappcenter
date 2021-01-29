@@ -42,6 +42,9 @@ export default function Home() {
                             </CardDeck>
                         </>
                     ))}
+                    {
+                        items[0]? null:<h5>Não existe produtos!</h5>
+                    }
                 </div>
                 <Card>
                     <Card.Body style={{ opacity: 0.8, backgroundRepeat: 'no-repeat', backgroundSize: '100vw', backgroundImage: 'url("https://i.ibb.co/8m40M4w/64747668-2874961069394995-8285739337077751808-n.png")' }}>
