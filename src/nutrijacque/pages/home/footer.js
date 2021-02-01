@@ -26,11 +26,11 @@ export default function FooterHome() {
                 <p><MailOutlineIcon /> Email: nutricionistajacquelinethedim@hotmail.com</p>
             </Row>
             <Row className="justify-content-center">
-                <p><PhoneIcon /> Tel.:(22) 99836-1425 <WhatsAppIcon /></p>
+                <p><PhoneIcon /> Tel.: (22) 99836-1425 <WhatsAppIcon /></p>
             </Row>
             <Row className="justify-content-center" style={{backgroundColor:'rgba(0, 0, 0, 0.6)', borderRadius:30}}>
                 <div style={{ marginRight: '10vw', marginLeft: '10vw' }} className="blockquote-footer">
-                    <a href="#">
+                    <a href="http://airnetec.000webhostapp.com">
                         <cite>Ainertec</cite>
                     </a>
                 </div>

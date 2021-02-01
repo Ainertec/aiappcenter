@@ -11,6 +11,7 @@ import NavBar from './navbar';
 import CreateCategory from './categoria';
 import CreateIten from './item';
 import ListIten from './item/opcao';
+import ListCategory from './categoria/opcao';
 
 import BuildIcon from '@material-ui/icons/Build';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
@@ -54,7 +55,7 @@ export default function Control() {
                     <Col>
                         <main style={{marginTop:'5vh'}}>
                             {posicaoMenu == 0 && <CreateCategory/>}
-                            {posicaoMenu == 1 && <>Teste1</>}
+                            {posicaoMenu == 1 && <ListCategory />}
                             {posicaoMenu == 2 && <CreateIten/>}
                             {posicaoMenu == 3 && <ListIten />}
                             {posicaoMenu == 4 && <>Teste4</>}

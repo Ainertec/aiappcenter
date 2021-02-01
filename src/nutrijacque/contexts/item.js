@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 const ItemContext = createContext({});
 
 export const ItemProvider = ({ children }) => {
+    const [id, setId] = useState('');
     const [fotoCapa, setFotoCapa] = useState('');
     const [nome, setNome] = useState('');
     const [preco, setPreco] = useState(0.00);
@@ -13,6 +14,7 @@ export const ItemProvider = ({ children }) => {
     const [createdAt, setCreatedAt] = useState('');
 
     function iniciarVariaveisItem() {
+        setId();
         setFotoCapa();
         setNome();
         setPreco(0.00);
@@ -26,6 +28,8 @@ export const ItemProvider = ({ children }) => {
     return (
         <ItemContext.Provider
             value={{
+                id,
+                setId,
                 fotoCapa,
                 setFotoCapa,
                 nome,
