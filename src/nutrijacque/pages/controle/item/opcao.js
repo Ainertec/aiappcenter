@@ -9,8 +9,13 @@ import {
     ListGroup,
     Image,
     Badge,
+    Modal,
+    Alert
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useItem } from "../../../contexts/item";
+
+import CreateIten from './index';
 
 import Api from "../../../services/api";
 
@@ -18,6 +23,22 @@ import Api from "../../../services/api";
 export default function ListIten() {
     const[items, setItems] = useState([]);
     const[busca, setBusca] = useState('');
+    const [show, setShow] = useState(false);
+    const {
+        setId,
+        setFotoCapa,
+        setNome,
+        setPreco,
+        setLinkPagamento,
+        setDescricao,
+        setLinkVideo,
+        setCreatedAt,
+        iniciarVariaveisItem
+    } = useItem();
+
+
+    const handleClose = () => (setShow(false),iniciarVariaveisItem());
+    const handleShow = () => setShow(true);
 
     async function exibirTodos(){
         Api.get('items').then(response => {
@@ -32,8 +53,17 @@ export default function ListIten() {
     }
 
     function exibiId(id){
+        iniciarVariaveisItem();
         const result = items.find(element => element._id == id);
-        console.log(result);
+        setId(result._id)
+        setFotoCapa(result.photo);
+        setNome(result.name);
+        setPreco(result.price);
+        setLinkPagamento(result.linkpagament);
+        setDescricao(result.description);
+        setLinkVideo(result.linkvideo);
+        setCreatedAt(result.createdAt);
+        handleShow();
     }
 
     return (
@@ -71,12 +101,22 @@ export default function ListIten() {
                                         </ListGroup.Item>
                                     ))
                                 :
-                                    <h4>Nenhum item listado!</h4>
+                                    <Alert variant="warning">
+                                        Nenhum item listado!
+                                    </Alert>
                             }
                         </ListGroup>
                     </Col>
                 </Col>
             </Row>
+            <Modal show={show} size="xl" onHide={handleClose}>
+                <Modal.Header closeButton>
+                <Modal.Title>Produto</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <CreateIten dado={{tipo:'modificar'}} />
+                </Modal.Body>
+            </Modal>
         </Container>
     );
 }

@@ -54,9 +54,9 @@ export default function Control() {
                     </Col>
                     <Col>
                         <main style={{marginTop:'5vh'}}>
-                            {posicaoMenu == 0 && <CreateCategory/>}
+                            {posicaoMenu == 0 && <CreateCategory dado={{tipo:'cadastrar'}} />}
                             {posicaoMenu == 1 && <ListCategory />}
-                            {posicaoMenu == 2 && <CreateIten/>}
+                            {posicaoMenu == 2 && <CreateIten dado={{tipo:'cadastrar'}} />}
                             {posicaoMenu == 3 && <ListIten />}
                             {posicaoMenu == 4 && <>Teste4</>}
                         </main>

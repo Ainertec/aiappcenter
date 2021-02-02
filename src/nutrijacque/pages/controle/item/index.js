@@ -20,10 +20,11 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CommentIcon from '@material-ui/icons/Comment';
 
 
-export default function CreateIten() {
+export default function CreateIten({ dado }) {
     const [categorys, setCategorys] = useState([]);
     const [ idCategoria, setIdCategoria] = useState('');
     const {
+        id,
         fotoCapa,
         setFotoCapa,
         nome,
@@ -36,6 +37,7 @@ export default function CreateIten() {
         setDescricao,
         linkVideo,
         setLinkVideo,
+        createdAt,
         iniciarVariaveisItem
     } = useItem();
 
@@ -81,9 +83,39 @@ export default function CreateIten() {
         });
         //await setProgresso(false);
     }
+
+    async function atualizarItem() {
+        const item = {
+            name:nome,
+            photo:fotoCapa,
+            linkpagament:linkPagamento,
+            description:descricao,
+            price:preco,
+            linkvideo:linkVideo,
+            comments: []
+        };
+    
+        //await setProgresso(true);
+        await Api.put(`items/${id}`, item).then(response => {
+            //notificacaoCadastroCliente();
+            console.log('atualizado com sucesso!')
+        });
+        //await setProgresso(false);
+    }
+
+    async function excluirItem() {
+        //await setProgresso(true);
+        await Api.delete(`items/${id}`).then(response => {
+            //notificacaoCadastroCliente();
+            console.log('excluido com sucesso!')
+        });
+        //await setProgresso(false);
+    }
     
     useEffect(() => {
-        iniciarVariaveisItem()
+        if(dado.tipo=='cadastrar'){
+            iniciarVariaveisItem()
+        }
     }, []);
 
     useEffect(() => {
@@ -100,46 +132,57 @@ export default function CreateIten() {
                     <Form>
                         <Form.Group controlId="fotocapa">
                             <Form.Label>Link Foto:</Form.Label>
-                            <Form.Control placeholder="Exemplo: https://google.fotos/minhaimagem" onChange={(event) => setFotoCapa(event.target.value)}/>
+                            <Form.Control placeholder="Exemplo: https://google.fotos/minhaimagem" onChange={(event) => setFotoCapa(event.target.value)} value={fotoCapa}/>
                         </Form.Group>
                         <Form.Group controlId="nome">
                             <Form.Label>Nome:</Form.Label>
-                            <Form.Control placeholder="Exemplo: Curso de emagrecimento" onChange={(event) => setNome(event.target.value)}/>
+                            <Form.Control placeholder="Exemplo: Curso de emagrecimento" onChange={(event) => setNome(event.target.value)} value={nome}/>
                         </Form.Group>
-                        <Form.Group controlId="Categoria">
-                            <Form.Label>Categoria:</Form.Label>
-                            <Form.Control as="select" multiple>
-                            {categorys.map((option) => (
-                                <option key={option._id} onClick={(event)=> setIdCategoria(event.target.value)} value={option._id}>{option.name}</option>
-                            ))}
-                            
-                            </Form.Control>
-                        </Form.Group>
+                        {
+                            dado.tipo == 'cadastrar'?
+                                <Form.Group controlId="Categoria">
+                                    <Form.Label>Categoria:</Form.Label>
+                                    <Form.Control as="select" multiple>
+                                    {categorys.map((option) => (
+                                        <option key={option._id} onClick={(event)=> setIdCategoria(event.target.value)} value={option._id}>{option.name}</option>
+                                    ))}
+                                    
+                                    </Form.Control>
+                                </Form.Group>
+                            :
+                                <></>
+                        }
                         <Form.Group controlId="preco">
                             <Form.Label>Preço:</Form.Label>
-                            <Form.Control placeholder="" type="number" onChange={(event) => setPreco(event.target.value)}/>
+                            <Form.Control type="number" onChange={(event) => setPreco(event.target.value)} value={(parseFloat(preco)).toFixed(2)}/>
                         </Form.Group>
                         <Form.Group controlId="linkpagamento">
                             <Form.Label>Link pagamento:</Form.Label>
-                            <Form.Control placeholder="Exemplo: https://meupagamento.com" onChange={(event) => setLinkPagamento(event.target.value)}/>
+                            <Form.Control placeholder="Exemplo: https://meupagamento.com" onChange={(event) => setLinkPagamento(event.target.value)} value={linkPagamento}/>
                         </Form.Group>
                         <Form.Group controlId="descricao">
                             <Form.Label>Descrição</Form.Label>
-                            <Form.Control as="textarea" rows={3} onChange={(event) => setDescricao(event.target.value)} />
+                            <Form.Control as="textarea" rows={3} onChange={(event) => setDescricao(event.target.value)} value={descricao}/>
                         </Form.Group>
                         <Form.Group controlId="linkvideo">
                             <Form.Label>Link vídeo:</Form.Label>
-                            <Form.Control placeholder="Exemplo: https://youtube.com/meuvideo" onChange={(event) => setLinkVideo(event.target.value)}/>
+                            <Form.Control placeholder="Exemplo: https://youtube.com/meuvideo" onChange={(event) => setLinkVideo(event.target.value)} value={linkVideo}/>
                         </Form.Group>
-                        <Button style={{margin:'2px'}} variant="primary" onClick={cadastrarItem}>
-                            Criar
-                        </Button>
-                        <Button style={{margin:'2px'}} variant="info" >
-                            Atualizar
-                        </Button>
-                        <Button style={{margin:'2px'}} variant="outline-danger" >
-                            Excluir
-                        </Button>
+                        {
+                            dado.tipo == 'cadastrar'?
+                                <Button style={{margin:'2px'}} variant="primary" onClick={cadastrarItem}>
+                                    Criar
+                                </Button>
+                            :
+                                <>
+                                    <Button style={{margin:'2px'}} variant="info" onClick={atualizarItem}>
+                                        Atualizar
+                                    </Button>
+                                    <Button style={{margin:'2px'}} variant="outline-danger" onClick={excluirItem}>
+                                        Excluir
+                                    </Button>
+                                </>
+                        }
                     </Form>
                 </Col>
                 <Col xs={7} style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', height:'80vh', position:'relative', zIndex:1, overflow:'scroll'}}>
@@ -152,8 +195,7 @@ export default function CreateIten() {
                             />
                             <Media.Body className="mr-3">
                                 <h5 style={{ marginBottom: '5vh' }}><u>{nome}</u></h5>
-                                <p>Categoria: {idCategoria}</p>
-                                <p>Criado em: 0000-00-00</p>
+                                <p>Criado em: {createdAt? createdAt:'0000-00-00'}</p>
                                 <h3 style={{ color: 'red', marginBottom: '5vh' }}>R${(parseFloat(preco)).toFixed(2)}</h3>
                                 <Button onClick={() => { alert('Aqui vc será direcionado para o pagamento!(integração com o link do outro sistema.)') }} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="warning" size="lg" block>
                                     <ShoppingCartIcon /> Comprar

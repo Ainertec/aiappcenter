@@ -7,8 +7,13 @@ import {
     Row,
     Col,
     ListGroup,
+    Modal,
+    Alert,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { useCategory } from "../../../contexts/category";
+import CreateCategory from './index';
 
 import Api from "../../../services/api";
 
@@ -16,6 +21,17 @@ import Api from "../../../services/api";
 export default function ListCategory() {
     const[categorys, setCategorys] = useState([]);
     const[busca, setBusca] = useState('');
+    const [show, setShow] = useState(false);
+    const {
+        setId,
+        setName,
+        setItems,
+        iniciarVariavelCategory,
+    } = useCategory();
+
+
+    const handleClose = () => (setShow(false),iniciarVariavelCategory());
+    const handleShow = () => setShow(true);
 
     async function exibirTodos(){
         Api.get('categorys').then(response => {
@@ -32,6 +48,10 @@ export default function ListCategory() {
     function exibiId(id){
         const result = categorys.find(element => element._id == id);
         console.log(result);
+        setId(result._id);
+        setName(result.name);
+        setItems(result.items);
+        handleShow();
     }
 
     return (
@@ -59,12 +79,22 @@ export default function ListCategory() {
                                         </ListGroup.Item>
                                     ))
                                 :
-                                    <h4>Nenhuma categoria listada!</h4>
+                                    <Alert variant="warning">
+                                        Nenhuma categoria listada!
+                                    </Alert>
                             }
                         </ListGroup>
                     </Col>
                 </Col>
             </Row>
+            <Modal show={show} size="xl" onHide={handleClose}>
+                <Modal.Header closeButton>
+                <Modal.Title>Categoria</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <CreateCategory dado={{tipo:'modificar'}} />
+                </Modal.Body>
+            </Modal>
         </Container>
     );
 }

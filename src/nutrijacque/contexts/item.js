@@ -12,6 +12,7 @@ export const ItemProvider = ({ children }) => {
     const [linkVideo, setLinkVideo] = useState('');
     const [categoria, setCategoria] = useState('');
     const [createdAt, setCreatedAt] = useState('');
+    const [comments, setComments] = useState([]);
 
     function iniciarVariaveisItem() {
         setId();
@@ -23,6 +24,7 @@ export const ItemProvider = ({ children }) => {
         setLinkVideo();
         setCategoria();
         setCreatedAt();
+        setComments([]);
     }
 
     return (
@@ -46,6 +48,8 @@ export const ItemProvider = ({ children }) => {
                 setCategoria,
                 createdAt,
                 setCreatedAt,
+                comments,
+                setComments,
                 iniciarVariaveisItem
             }}
         >

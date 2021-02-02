@@ -5,6 +5,7 @@ import {
     Container,
     CardColumns,
     Card,
+    Alert,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useBuscaItem } from "../../contexts/buscaItem";
@@ -49,9 +50,13 @@ export default function Home() {
                             </>
                         ))
                     }
-                    {console.log(items[0])}
                     {
-                        items[0]? null:<h5>Não existe produtos!</h5>
+                        items[0]?
+                            null
+                        :
+                            <Alert variant="warning">
+                                Não existe produtos!
+                            </Alert>
                     }
                 </div>
                 <Card>

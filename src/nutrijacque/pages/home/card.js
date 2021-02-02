@@ -16,18 +16,20 @@ export default function CardItem({ dado }) {
     };
 
     const {
+        setId,
         setFotoCapa,
         setNome,
         setPreco,
         setLinkPagamento,
         setDescricao,
         setLinkVideo,
-        setCategoria,
         setCreatedAt,
+        setComments,
         iniciarVariaveisItem
     } = useItem();
 
     function setDados(){
+        setId(dado._id);
         setFotoCapa(dado.photo);
         setNome(dado.name);
         setPreco(dado.price);
@@ -35,6 +37,7 @@ export default function CardItem({ dado }) {
         setDescricao(dado.description);
         setLinkVideo(dado.linkvideo);
         setCreatedAt(dado.createdAt);
+        setComments(dado.comments);
         handleToItem();
     }
 

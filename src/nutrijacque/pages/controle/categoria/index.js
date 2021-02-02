@@ -11,10 +11,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Api from "../../../services/api";
 import { useCategory } from "../../../contexts/category";
 
-export default function CreateCategory() {
+export default function CreateCategory({ dado }) {
     const {
+        id,
         name,
         setName,
+        items,
+        setItems,
         iniciarVariavelCategory,
     } = useCategory();
 
@@ -32,9 +35,41 @@ export default function CreateCategory() {
         //await setProgresso(false);
     
     }
+
+    async function atualizarCategoria() {
+        let filtroItems = [];
+        for(const fitem of items){
+            filtroItems.push(fitem._id);
+        };
+
+        const category = {
+          name,
+          items:filtroItems
+        };
+    
+        //await setProgresso(true);
+        await Api.put(`categorys/${id}`, category).then(response => {
+          //notificacaoCadastroCliente();
+          console.log('atualizado com sucesso!')
+        });
+        //await setProgresso(false);
+    
+    }
+
+    async function excluirCategoria() {
+        //await setProgresso(true);
+        await Api.delete(`categorys/${id}`).then(response => {
+          //notificacaoCadastroCliente();
+          console.log('Excluido com sucesso!')
+        });
+        //await setProgresso(false);
+    
+    }
     
     useEffect(() => {
-        iniciarVariavelCategory()
+        if(dado.tipo=='cadastrar'){
+            iniciarVariavelCategory()
+        }
     }, []);
 
 
@@ -46,17 +81,23 @@ export default function CreateCategory() {
                     <Form>
                         <Form.Group controlId="nome">
                             <Form.Label>Nome:</Form.Label>
-                            <Form.Control placeholder="Exemplo: Cursos" onChange={(event) => setName(event.target.value)}/>
+                            <Form.Control placeholder="Exemplo: Cursos" onChange={(event) => setName(event.target.value)} value={name}/>
                         </Form.Group>
-                        <Button style={{margin:'2px'}} variant="primary" onClick={cadastrarCategoria}>
-                            Criar
-                        </Button>
-                        <Button style={{margin:'2px'}} variant="info" >
-                            Atualizar
-                        </Button>
-                        <Button style={{margin:'2px'}} variant="outline-danger" >
-                            Excluir
-                        </Button>
+                        {
+                            dado.tipo=='cadastrar'?
+                                <Button style={{margin:'2px'}} variant="primary" onClick={cadastrarCategoria}>
+                                    Criar
+                                </Button>
+                            :
+                                <>
+                                    <Button style={{margin:'2px'}} variant="info" onClick={atualizarCategoria}>
+                                        Atualizar
+                                    </Button>
+                                    <Button style={{margin:'2px'}} variant="outline-danger" onClick={excluirCategoria} >
+                                        Excluir
+                                    </Button>
+                                </>
+                        }
                     </Form>
                 </Col>
                 <Col xs={7} style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', height:'80vh'}}>
