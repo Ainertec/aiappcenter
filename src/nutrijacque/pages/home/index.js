@@ -9,6 +9,8 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useBuscaItem } from "../../contexts/buscaItem";
+import { useProgresso } from "../../contexts/prog";
+import Carregando from "../../components/progress/carregando";
 
 import Api from "../../services/api";
 
@@ -18,6 +20,7 @@ import CardItem from './card';
 import FooterHome from './footer';
 
 export default function Home() {
+    const { setProgresso } = useProgresso();
     const {
         items,
         setItems,
@@ -25,16 +28,21 @@ export default function Home() {
     } = useBuscaItem();
 
     useEffect(() => {
-        iniciarVariavelBuscaItem();
-        Api.get('categorys').then(response => {
-            setItems(response.data);
-        });
+        async function carregarProdutos() {
+            await iniciarVariavelBuscaItem();
+            await setProgresso(true);
+            await Api.get('categorys').then(response => {
+                setItems(response.data);
+            });
+          }
+          carregarProdutos();
     }, []);
 
     return (
         <div>
             <NavBar />
             <Container fluid>
+                <Carregando />
                 <Carrousel />
                 <div style={{ marginBottom: '5vh', marginTop: '10vh', marginRight: '10vw', marginLeft: '10vw' }}>
                     {

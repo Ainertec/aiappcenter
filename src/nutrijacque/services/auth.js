@@ -4,7 +4,7 @@ export async function signIn(username, password) {
     // const apiConnection = await api();
     console.log('Testando', username, password)
     const response = await api
-        .post('sessions', {
+        .post('/sessions', {
             username,
             password,
         })

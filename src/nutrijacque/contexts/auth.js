@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("@RNAuth:user", JSON.stringify(response.data.user));
         localStorage.setItem("@RNAuth:token", response.data.token);
 
-        history.push("/nutrijacquethedim/");
+        history.push("/nutricionistajacquelinethedim/controle");
         return 200;
     }
 
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("@RNAuth:user");
         localStorage.removeItem("@RNAuth:token");
 
-        history.push("/nutrijacquethedim/");
+        history.push("/nutricionistajacquelinethedim/");
     }
 
     return (
