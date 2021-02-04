@@ -11,6 +11,8 @@ import {
     Alert,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Carregando from "../../../components/progress/carregando";
+import { useProgresso } from "../../../contexts/prog";
 
 import { useCategory } from "../../../contexts/category";
 import CreateCategory from './index';
@@ -19,6 +21,7 @@ import Api from "../../../services/api";
 
 
 export default function ListCategory() {
+    const { setProgresso } = useProgresso();
     const[categorys, setCategorys] = useState([]);
     const[busca, setBusca] = useState('');
     const [show, setShow] = useState(false);
@@ -34,15 +37,19 @@ export default function ListCategory() {
     const handleShow = () => setShow(true);
 
     async function exibirTodos(){
-        Api.get('categorys').then(response => {
+        await setProgresso(true);
+        await Api.get('categorys').then(response => {
             setCategorys(response.data);
         });
+        await setProgresso(false);
     }
 
     async function exibirPorNome(){
-        Api.get(`categorys/${busca}`).then(response => {
+        await setProgresso(true);
+        await Api.get(`categorys/${busca}`).then(response => {
             setCategorys(response.data);
         });
+        await setProgresso(false);
     }
 
     function exibiId(id){
@@ -56,6 +63,7 @@ export default function ListCategory() {
 
     return (
         <Container fluid>
+            <Carregando />
             <h4 style={{textAlign:'center', marginBottom:'3vh'}}>Listagem de categorias</h4>
             <Row>
                 <Col xs={12} style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', height:'75vh', boxShadow: "5px 5px 5px black", padding:'3vh', marginRight:'2vw', position:'relative', zIndex:1, overflow:'scroll'}}>

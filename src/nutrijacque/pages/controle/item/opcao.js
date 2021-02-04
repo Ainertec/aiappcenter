@@ -14,6 +14,8 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useItem } from "../../../contexts/item";
+import Carregando from "../../../components/progress/carregando";
+import { useProgresso } from "../../../contexts/prog";
 
 import CreateIten from './index';
 
@@ -21,6 +23,7 @@ import Api from "../../../services/api";
 
 
 export default function ListIten() {
+    const { setProgresso } = useProgresso();
     const[items, setItems] = useState([]);
     const[busca, setBusca] = useState('');
     const [show, setShow] = useState(false);
@@ -41,15 +44,19 @@ export default function ListIten() {
     const handleShow = () => setShow(true);
 
     async function exibirTodos(){
-        Api.get('items').then(response => {
+        await setProgresso(true);
+        await Api.get('items').then(response => {
             setItems(response.data);
         });
+        await setProgresso(false);
     }
 
     async function exibirPorNome(){
-        Api.get(`items/${busca}`).then(response => {
+        await setProgresso(true);
+        await Api.get(`items/${busca}`).then(response => {
             setItems(response.data);
         });
+        await setProgresso(false);
     }
 
     function exibiId(id){
@@ -68,6 +75,7 @@ export default function ListIten() {
 
     return (
         <Container fluid>
+            <Carregando />
             <h4 style={{textAlign:'center', marginBottom:'3vh'}}>Listagem de produtos</h4>
             <Row>
                 <Col xs={12} style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', height:'75vh', boxShadow: "5px 5px 5px black", padding:'3vh', marginRight:'2vw', position:'relative', zIndex:1, overflow:'scroll'}}>

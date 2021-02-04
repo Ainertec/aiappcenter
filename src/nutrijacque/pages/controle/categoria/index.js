@@ -7,11 +7,14 @@ import {
     Button,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Carregando from "../../../components/progress/carregando";
+import { useProgresso } from "../../../contexts/prog";
 
 import Api from "../../../services/api";
 import { useCategory } from "../../../contexts/category";
 
 export default function CreateCategory({ dado }) {
+    const { setProgresso } = useProgresso();
     const {
         id,
         name,
@@ -28,11 +31,11 @@ export default function CreateCategory({ dado }) {
           items:[]
         };
     
-        //await setProgresso(true);
+        await setProgresso(true);
         await Api.post(`categorys`, category).then(response => {
           //notificacaoCadastroCliente();
         });
-        //await setProgresso(false);
+        await setProgresso(false);
     
     }
 
@@ -47,22 +50,22 @@ export default function CreateCategory({ dado }) {
           items:filtroItems
         };
     
-        //await setProgresso(true);
+        await setProgresso(true);
         await Api.put(`categorys/${id}`, category).then(response => {
           //notificacaoCadastroCliente();
           console.log('atualizado com sucesso!')
         });
-        //await setProgresso(false);
+        await setProgresso(false);
     
     }
 
     async function excluirCategoria() {
-        //await setProgresso(true);
+        await setProgresso(true);
         await Api.delete(`categorys/${id}`).then(response => {
           //notificacaoCadastroCliente();
           console.log('Excluido com sucesso!')
         });
-        //await setProgresso(false);
+        await setProgresso(false);
     
     }
     
@@ -75,6 +78,7 @@ export default function CreateCategory({ dado }) {
 
     return (
         <Container fluid>
+            <Carregando />
             <Row>
                 <Col xs={4} style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', height:'80vh', boxShadow: "5px 5px 5px black", padding:'3vh', marginRight:'2vw'}}>
                     <h5 style={{textAlign:'center'}}>Categoria</h5>

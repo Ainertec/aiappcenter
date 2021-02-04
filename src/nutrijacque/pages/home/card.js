@@ -46,12 +46,12 @@ export default function CardItem({ dado }) {
     }, []);
 
     return (
-        <Card onClick={setDados} style={{borderRadius:30}}>
+        <Card type="button" onClick={setDados} style={{borderRadius:30}}>
             <Card.Img variant="top" style={{borderRadius:30, maxHeight:'50vh'}} src={dado.photo} />
             <Card.Body>
                 <Card.Title>{dado.name}</Card.Title>
                 <Card.Text>
-                    {dado.description}
+                    {(dado.description).length < 60? dado.description:(dado.description).slice(0, 20)+'...'}
                 </Card.Text>
             </Card.Body>
             <Card.Footer style={{borderRadius:30}}>

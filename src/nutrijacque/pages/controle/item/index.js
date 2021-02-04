@@ -10,6 +10,8 @@ import {
     Accordion,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Carregando from "../../../components/progress/carregando";
+import { useProgresso } from "../../../contexts/prog";
 
 import Api from "../../../services/api";
 import { useItem } from "../../../contexts/item";
@@ -21,6 +23,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 
 
 export default function CreateIten({ dado }) {
+    const { setProgresso } = useProgresso();
     const [categorys, setCategorys] = useState([]);
     const [ idCategoria, setIdCategoria] = useState('');
     const {
@@ -53,12 +56,12 @@ export default function CreateIten({ dado }) {
             comments: []
         };
     
-        //await setProgresso(true);
+        await setProgresso(true);
         await Api.post(`items`, item).then(response => {
             //notificacaoCadastroCliente();
             adicionarItemNaCategoria(response.data._id);
         });
-        //await setProgresso(false);
+        await setProgresso(false);
     }
 
     async function adicionarItemNaCategoria(id) {
@@ -77,11 +80,11 @@ export default function CreateIten({ dado }) {
         ));
         categoriaAtualizada.items = vetorDeItens;
 
-        //await setProgresso(true);
+        await setProgresso(true);
         await Api.put(`categorys/${idCategoria}`, categoriaAtualizada).then(response => {
             //notificacaoCadastroCliente();
         });
-        //await setProgresso(false);
+        await setProgresso(false);
     }
 
     async function atualizarItem() {
@@ -95,21 +98,21 @@ export default function CreateIten({ dado }) {
             comments: []
         };
     
-        //await setProgresso(true);
+        await setProgresso(true);
         await Api.put(`items/${id}`, item).then(response => {
             //notificacaoCadastroCliente();
             console.log('atualizado com sucesso!')
         });
-        //await setProgresso(false);
+        await setProgresso(false);
     }
 
     async function excluirItem() {
-        //await setProgresso(true);
+        await setProgresso(true);
         await Api.delete(`items/${id}`).then(response => {
             //notificacaoCadastroCliente();
             console.log('excluido com sucesso!')
         });
-        //await setProgresso(false);
+        await setProgresso(false);
     }
     
     useEffect(() => {
@@ -119,13 +122,19 @@ export default function CreateIten({ dado }) {
     }, []);
 
     useEffect(() => {
-        Api.get('categorys').then(response => {
-            setCategorys(response.data);
-        });
+        async function carregarCategorias(){
+            await setProgresso(true);
+            await Api.get('categorys').then(response => {
+                setCategorys(response.data);
+            });
+            await setProgresso(false);
+        }
+        carregarCategorias();
     }, []);
 
     return (
         <Container fluid>
+            <Carregando />
             <Row>
                 <Col xs={4} style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', height:'80vh', boxShadow: "5px 5px 5px black", padding:'3vh', marginRight:'2vw', position:'relative', zIndex:1, overflow:'scroll'}}>
                     <h5 style={{textAlign:'center'}}>Produto</h5>

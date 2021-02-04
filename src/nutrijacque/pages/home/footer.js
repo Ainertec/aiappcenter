@@ -22,8 +22,8 @@ export default function FooterHome() {
                 />
                 <h4> Jacqueline Thedim</h4>
             </Row>
-            <Row className="justify-content-center">
-                <p><MailOutlineIcon /> Email: nutricionistajacquelinethedim@hotmail.com</p>
+            <Row className="justify-content-center" style={{marginTop:'5vh'}}>
+                <p style={{fontSize:'0.8em', textAlign:'center'}}><MailOutlineIcon/> Email: nutricionistajacquelinethedim@hotmail.com</p>
             </Row>
             <Row className="justify-content-center">
                 <p><PhoneIcon /> Tel.: (22) 99836-1425 <WhatsAppIcon /></p>

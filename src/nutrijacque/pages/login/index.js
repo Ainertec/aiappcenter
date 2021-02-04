@@ -9,6 +9,8 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useAuth } from '../../contexts/auth';
+import Carregando from "../../components/progress/carregando";
+import { useProgresso } from "../../contexts/prog";
 import Api from '../../services/api';
 
 
@@ -18,14 +20,15 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import NavBar from './navbar';
 
 export default function Login() {
+    const { setProgresso } = useProgresso();
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const { signIn } = useAuth();
 
     async function hanldleLogin() {
-        //await setProgresso(true)
+        await setProgresso(true)
         const result = await signIn({ name, password });
-        //await setProgresso(false)
+        await setProgresso(false)
         /*if (result == 200) {
             notificacaodeLogin('Login efetuado com sucesso!');
         } else {
@@ -38,6 +41,7 @@ export default function Login() {
         <div>
             <NavBar />
             <Container fluid>
+                <Carregando />
                 <Card border="info" style={{ marginRight: '10vw', marginLeft: '10vw', marginTop: '5vh', borderRadius: 10 }}>
                     <Row className="justify-content-center">
                         <Image style={{ opacity: 1, width: '18vw', marginTop: '2vh', borderRadius: 20, boxShadow: "5px 5px 5px black" }} src="https://i.ibb.co/ZKhr9x3/download.png" />

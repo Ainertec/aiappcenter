@@ -17,7 +17,7 @@ export default function NavBar() {
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="info" variant="dark" style={{ borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}>
-            <Navbar.Brand href="#home">
+            <Navbar.Brand>
                 <img
                     style={{ borderRadius: 30, maxWidth: 30 }}
                     src="https://i.ibb.co/ZKhr9x3/download.png"
@@ -29,7 +29,7 @@ export default function NavBar() {
 
                 </Nav>
                 <Nav>
-                    <Nav.Link href="#" onClick={handleMenuSignOut}><ExitToAppIcon /> Sair</Nav.Link>
+                    <Nav.Link type="button" onClick={handleMenuSignOut}><ExitToAppIcon /> Sair</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

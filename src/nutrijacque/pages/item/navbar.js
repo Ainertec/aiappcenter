@@ -16,7 +16,7 @@ export default function NavBar() {
     };
     return (
         <Navbar collapseOnSelect expand="lg" bg="info" variant="dark" style={{ borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}>
-            <Navbar.Brand href="#" onClick={handleToHome}>
+            <Navbar.Brand type="button" onClick={handleToHome}>
                 <img
                     style={{ maxWidth: 30, borderRadius: 30 }}
                     className="mr-3"
