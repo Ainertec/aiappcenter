@@ -12,6 +12,7 @@ import CreateCategory from './categoria';
 import CreateIten from './item';
 import ListIten from './item/opcao';
 import ListCategory from './categoria/opcao';
+import UserUpdate from './user/index';
 
 import BuildIcon from '@material-ui/icons/Build';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
@@ -58,7 +59,7 @@ export default function Control() {
                             {posicaoMenu == 1 && <ListCategory />}
                             {posicaoMenu == 2 && <CreateIten dado={{tipo:'cadastrar'}} />}
                             {posicaoMenu == 3 && <ListIten />}
-                            {posicaoMenu == 4 && <>Teste4</>}
+                            {posicaoMenu == 4 && <UserUpdate />}
                         </main>
                     </Col>
                 </Row>
