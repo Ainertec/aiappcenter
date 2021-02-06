@@ -5,6 +5,7 @@ const AlertContext = createContext({});
 export const AlertProvider = ({ children }) => {
     const [abrir, setAbrir] = useState(false);
     const [msg, setMsg] = useState("Testando");
+    const [type, setType] = useState("warning");
 
     return (
         <AlertContext.Provider
@@ -13,6 +14,8 @@ export const AlertProvider = ({ children }) => {
                 setAbrir,
                 msg,
                 setMsg,
+                type,
+                setType
             }}
         >
             {children}

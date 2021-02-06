@@ -21,7 +21,6 @@ export const ValidationProvider = ({ children }) => {
                 result = false;
             }
         }
-        console.log('entre' + dado)
         return result;
     }
 

@@ -83,7 +83,7 @@ export default function CreateCategory({ dado }) {
                 <Col xs={4} style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', height:'80vh', boxShadow: "5px 5px 5px black", padding:'3vh', marginRight:'2vw'}}>
                     <h5 style={{textAlign:'center'}}>Categoria</h5>
                     <Form>
-                        <Form.Group controlId="nome">
+                        <Form.Group controlId="Camponome">
                             <Form.Label>Nome:</Form.Label>
                             <Form.Control placeholder="Exemplo: Cursos" onChange={(event) => setName(event.target.value)} value={name}/>
                         </Form.Group>

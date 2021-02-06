@@ -8,20 +8,22 @@ import { AuthProvider } from "../contexts/auth";
 import { AlertProvider } from "../contexts/alertN";
 //import { UserProvider } from "../contexts/user";
 import { ProgressoProvider } from "../contexts/prog";
-//import { ValidationProvider } from '../validation/validation';
+import { ValidationProvider } from '../validation/validation';
 
 export default function RotasMcDonuts() {
     return (
         <AuthProvider>
             <AlertProvider>
                 <ProgressoProvider>
-                    <CategoryProvider>
-                        <ItemProvider>
-                            <BuscaItemProvider>
-                                <RotaNutriJacque />
-                            </BuscaItemProvider>
-                        </ItemProvider>
-                    </CategoryProvider>
+                    <ValidationProvider>
+                        <CategoryProvider>
+                            <ItemProvider>
+                                <BuscaItemProvider>
+                                    <RotaNutriJacque />
+                                </BuscaItemProvider>
+                            </ItemProvider>
+                        </CategoryProvider>
+                    </ValidationProvider>
                 </ProgressoProvider>
             </AlertProvider>
         </AuthProvider>

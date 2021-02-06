@@ -11,11 +11,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useAuth } from '../../../contexts/auth';
 import Carregando from "../../../components/progress/carregando";
 import { useProgresso } from "../../../contexts/prog";
+import Notification from "../../../components/notification/notification";
+import { useAlert } from '../../../contexts/alertN';
+import { useValidation } from '../../../validation/validation';
 
 import Api from "../../../services/api";
 
 export default function UserUpdate({ dado }) {
     const { setProgresso } = useProgresso();
+    const { 
+        setAbrir,
+        setMsg,
+        setType,
+    } = useAlert();
+    const { validaCampoText } = useValidation();
     const { user, signOut } = useAuth();
     const [ idUser, setIdUser] = useState('');
     const [ username, setUsername] = useState('');
@@ -23,24 +32,33 @@ export default function UserUpdate({ dado }) {
     const [ question, setQuestion] = useState('');
     const [ response, setResponse] = useState('');
 
-    async function atualizarUser() {
-        const user = {
-            username,
-            password,
-            question,
-            response,
-            admin:true
-        };
+    function notificacaoUsuario(mensagem, tipo) {
+        setType(tipo)
+        setMsg(mensagem);
+        setAbrir(true);
+    }
 
-        console.log(user)
+    async function atualizarUser() {
+        if(validaCampoText([idUser, username, password, response, question])){
+            const user = {
+                username,
+                password,
+                question,
+                response,
+                admin:true
+            };
     
-        await setProgresso(true);
-        /*await Api.put(`users/${idUser}`, user).then(response => {
-            //notificacaoCadastroCliente();
-            console.log('Usuário atualizado com sucesso!')
-        });*/
-        await setProgresso(false);
-        //signOut();
+            console.log(user)
+        
+            await setProgresso(true);
+            await Api.put(`users/${idUser}`, user).then(response => {
+                notificacaoUsuario(`Usuário ${response.data.username} atualizado com sucesso!`,'success');
+            });
+            await setProgresso(false);
+            signOut();
+        }else{
+            notificacaoUsuario('Preencha todos os campos!', 'danger');
+        }
     }
 
     useEffect(() => {
@@ -51,6 +69,7 @@ export default function UserUpdate({ dado }) {
 
     return (
         <Container fluid>
+            <Notification />
             <Carregando />
             <Card>
                 <Card.Header>Dados de usuário</Card.Header>
@@ -70,7 +89,7 @@ export default function UserUpdate({ dado }) {
                         <Form.Row>
                             <Form.Group as={Col} controlId="campopergunta">
                                 <Form.Label>Pergunta para recuperação de conta:</Form.Label>
-                                <Form.Control as="select" defaultValue={question}>
+                                <Form.Control as="select" multiple>
                                     <option onClick={(event) => setQuestion(event.target.value)} value="Qual o modelo do seu primeiro carro?">Qual o modelo do seu primeiro carro?</option>
                                     <option onClick={(event) => setQuestion(event.target.value)} value="Qual o nome do seu melhor amigo de infância?">Qual o nome do seu melhor amigo de infância?</option>
                                     <option onClick={(event) => setQuestion(event.target.value)} value="Qual o nome do seu primeiro animal de estimação?">Qual o nome do seu primeiro animal de estimação?</option>
