@@ -9,6 +9,9 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory } from "react-router-dom";
 import { useBuscaItem } from "../../contexts/buscaItem";
+import { useProgresso } from "../../contexts/prog";
+import { useAlert } from '../../contexts/alertN';
+import { useValidation } from '../../validation/validation';
 
 import Api from "../../services/api";
 
@@ -16,11 +19,24 @@ import SecurityIcon from '@material-ui/icons/Security';
 import SearchIcon from '@material-ui/icons/Search';
 
 export default function NavBar() {
+    const { setProgresso } = useProgresso();
+    const { 
+        setAbrir,
+        setMsg,
+        setType,
+    } = useAlert();
+    const { validaCampoText } = useValidation();
     const {
         setItems,
         iniciarVariavelBuscaItem
     } = useBuscaItem();
     const [busca, setBusca] = useState('');
+
+    function notificacaoNavBar(mensagem, tipo) {
+        setType(tipo)
+        setMsg(mensagem);
+        setAbrir(true);
+    }
 
     const history = useHistory();
     const handleToLogin = () => {
@@ -29,18 +45,32 @@ export default function NavBar() {
 
     async function buscarProdutos(){
         iniciarVariavelBuscaItem();
-        Api.get(`items/${busca}`).then(response => {
-            setItems([{name:'',items:response.data}]);
-        });
+        if(validaCampoText([busca])){
+            await setProgresso(true);
+            await Api.get(`items/${busca}`).then(response => {
+                setItems([{name:'',items:response.data}]);
+            }).catch(error => {
+                try {
+                    if(error.response.status){
+                        notificacaoNavBar(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoNavBar(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
+            });
+            await setProgresso(false);
+        }else{
+            notificacaoNavBar(`Preencha o campo de busca!`, 'danger');   
+        }
     }
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="info" variant="dark" style={{ borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}>
             <Navbar.Brand>
                 <img
-                    style={{ borderRadius: 30, maxWidth: 30 }}
+                    style={{ borderRadius: 30, maxWidth: 30, boxShadow: "3px 3px 8px black" }}
                     src="https://i.ibb.co/ZKhr9x3/download.png"
-                /> Jacqueline Thedim
+                /> <span style={{ textShadow: '0.1em 0.1em 0.2em black'}}>Jacqueline Thedim</span>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">

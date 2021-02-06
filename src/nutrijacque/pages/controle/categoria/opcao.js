@@ -13,6 +13,9 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Carregando from "../../../components/progress/carregando";
 import { useProgresso } from "../../../contexts/prog";
+import Notification from "../../../components/notification/notification";
+import { useAlert } from '../../../contexts/alertN';
+import { useValidation } from '../../../validation/validation';
 
 import { useCategory } from "../../../contexts/category";
 import CreateCategory from './index';
@@ -22,6 +25,12 @@ import Api from "../../../services/api";
 
 export default function ListCategory() {
     const { setProgresso } = useProgresso();
+    const { 
+        setAbrir,
+        setMsg,
+        setType,
+    } = useAlert();
+    const { validaCampoText } = useValidation();
     const[categorys, setCategorys] = useState([]);
     const[busca, setBusca] = useState('');
     const [show, setShow] = useState(false);
@@ -33,6 +42,12 @@ export default function ListCategory() {
     } = useCategory();
 
 
+    function notificacaoCategoria(mensagem, tipo) {
+        setType(tipo)
+        setMsg(mensagem);
+        setAbrir(true);
+    }
+
     const handleClose = () => (setShow(false),iniciarVariavelCategory());
     const handleShow = () => setShow(true);
 
@@ -40,19 +55,39 @@ export default function ListCategory() {
         await setProgresso(true);
         await Api.get('categorys').then(response => {
             setCategorys(response.data);
+        }).catch(error => {
+            try {
+                if(error.response.status){
+                    notificacaoCategoria(`Tivemos um problema: ${error}.`, 'danger');
+                }
+            } catch (error) {
+                notificacaoCategoria(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+            }
         });
         await setProgresso(false);
     }
 
     async function exibirPorNome(){
-        await setProgresso(true);
-        await Api.get(`categorys/${busca}`).then(response => {
-            setCategorys(response.data);
-        });
-        await setProgresso(false);
+        if(validaCampoText([busca])){
+            await setProgresso(true);
+            await Api.get(`categorys/${busca}`).then(response => {
+                setCategorys(response.data);
+            }).catch(error => {
+                try {
+                    if(error.response.status){
+                        notificacaoCategoria(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoCategoria(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
+            });
+            await setProgresso(false);
+        }else{
+            notificacaoCategoria(`Preencha a busca!`, 'danger');
+        }
     }
 
-    function exibiId(id){
+    function selecionarCategoria(id){
         const result = categorys.find(element => element._id == id);
         console.log(result);
         setId(result._id);
@@ -63,6 +98,7 @@ export default function ListCategory() {
 
     return (
         <Container fluid>
+            <Notification />
             <Carregando />
             <h4 style={{textAlign:'center', marginBottom:'3vh'}}>Listagem de categorias</h4>
             <Row>
@@ -82,7 +118,7 @@ export default function ListCategory() {
                             {
                                 categorys[0]?
                                     categorys.map((category) => (
-                                        <ListGroup.Item variant="warning" onClick={()=> exibiId(category._id)} action key={category._id}>
+                                        <ListGroup.Item variant="warning" onClick={()=> selecionarCategoria(category._id)} action key={category._id}>
                                             <strong><u>{category.name}</u></strong>
                                         </ListGroup.Item>
                                     ))

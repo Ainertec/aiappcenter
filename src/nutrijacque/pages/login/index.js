@@ -12,6 +12,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useAuth } from '../../contexts/auth';
 import Carregando from "../../components/progress/carregando";
 import { useProgresso } from "../../contexts/prog";
+import Notification from "../../components/notification/notification";
+import { useAlert } from '../../contexts/alertN';
+import { useValidation } from '../../validation/validation';
 import Api from '../../services/api';
 
 
@@ -22,19 +25,35 @@ import NavBar from './navbar';
 
 export default function Login() {
     const { setProgresso } = useProgresso();
+    const { 
+        setAbrir,
+        setMsg,
+        setType,
+    } = useAlert();
+    const { validaCampoText } = useValidation();
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const { signIn } = useAuth();
 
+    function notificacaoLogin(mensagem, tipo) {
+        setType(tipo)
+        setMsg(mensagem);
+        setAbrir(true);
+    }
+
     async function hanldleLogin() {
         await setProgresso(true)
-        const result = await signIn({ name, password });
+        if(validaCampoText([name,password])){
+            const result = await signIn({ name, password });
+            if (result == 200) {
+                notificacaoLogin('Login efetuado com sucesso!','success');
+            } else {
+                notificacaoLogin('Usuário ou senha incorretos!','danger');
+            }
+        }else{
+            notificacaoLogin('Preencha o usuário e a senha!','danger');
+        }
         await setProgresso(false)
-        /*if (result == 200) {
-            notificacaodeLogin('Login efetuado com sucesso!');
-        } else {
-            notificacaodeLogin('Usuário ou senha incorretos!');
-        }*/
     }
 
 
@@ -46,27 +65,53 @@ export default function Login() {
     const handleClose = () => setShow(false);
 
     async function handleAbrirRecuperarSenha() {
-        setShow(true);
-        await setProgresso(true)
-        await Api.get(`forgot/${name}`).then(result => {
-            setQuestion(result.data.question);
-        });
-        await setProgresso(false)
+        if(validaCampoText([name])){
+            setShow(true);
+            await setProgresso(true)
+            await Api.get(`forgot/${name}`).then(result => {
+                setQuestion(result.data.question);
+            }).catch(error => {
+                try {
+                    if(error.response.status){
+                        notificacaoLogin(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoLogin(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
+            });
+            await setProgresso(false)
+        }else{
+            notificacaoLogin('Preencha o usuário!','danger');
+        }
     };
 
     async function recuperarSenhaConta() {
-        const resetSenha = {
-            username: name,
-            response,
-            password: newPassword,
+        if(validaCampoText([response,newPassword])){
+            const resetSenha = {
+                username: name,
+                response,
+                password: newPassword,
+            }
+    
+            await setProgresso(true);
+            await Api.post(`forgot`, resetSenha).then(result => {
+                notificacaoLogin(`Conta recuperada! Efetue o login.`, 'success');
+                setShow(false);
+            }).catch(error => {
+                try {
+                    if(error.response.status == 400){
+                        notificacaoLogin(`Resposta incorreta! Não foi possível recuperar a conta.`, 'danger');
+                    }else{
+                        notificacaoLogin(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoLogin(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
+            });
+            await setProgresso(false);
+        }else{
+            notificacaoLogin('Preencha a resposta e nova senha!','danger');
         }
-        await setProgresso(true)
-        await Api.post(`forgot`, resetSenha).then(result => {
-            //setAbrir(true);
-            //setMsg('Senha atualizada com sucesso!');
-            setShow(false);
-        });
-        await setProgresso(false)
     }
 
     
@@ -74,6 +119,7 @@ export default function Login() {
         <div>
             <NavBar />
             <Container fluid>
+                <Notification />
                 <Carregando />
                 <Card border="info" style={{ marginRight: '10vw', marginLeft: '10vw', marginTop: '5vh', borderRadius: 10 }}>
                     <Row className="justify-content-center">
@@ -112,7 +158,7 @@ export default function Login() {
                             </Form.Group>
                             <Form.Group controlId="formBasicPassword">
                                 <Form.Label>Nova senha:</Form.Label>
-                                <Form.Control type="password" placeholder="Entre com a senha." onChange={event => setNewPassword(event.target.value)} value={newPassword} />
+                                <Form.Control type="password" placeholder="Entre com a nova senha." onChange={event => setNewPassword(event.target.value)} value={newPassword} />
                             </Form.Group>
                             <Button onClick={recuperarSenhaConta} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="success" size="lg" block>
                                 Atualizar

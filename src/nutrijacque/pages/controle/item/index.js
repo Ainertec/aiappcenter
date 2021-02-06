@@ -12,6 +12,9 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Carregando from "../../../components/progress/carregando";
 import { useProgresso } from "../../../contexts/prog";
+import Notification from "../../../components/notification/notification";
+import { useAlert } from '../../../contexts/alertN';
+import { useValidation } from '../../../validation/validation';
 
 import Api from "../../../services/api";
 import { useItem } from "../../../contexts/item";
@@ -24,8 +27,16 @@ import CommentIcon from '@material-ui/icons/Comment';
 
 export default function CreateIten({ dado }) {
     const { setProgresso } = useProgresso();
+    const { 
+        setAbrir,
+        setMsg,
+        setType,
+    } = useAlert();
+    const { validaCampoText } = useValidation();
     const [categorys, setCategorys] = useState([]);
     const [ idCategoria, setIdCategoria] = useState('');
+    const [ botaoConfirmacaoAtualizar, setBotaoConfirmacaoAtualizar] = useState(false);
+    const [ botaoConfirmacaoExcluir, setBotaoConfirmacaoExcluir] = useState(false);
     const {
         id,
         fotoCapa,
@@ -44,24 +55,43 @@ export default function CreateIten({ dado }) {
         iniciarVariaveisItem
     } = useItem();
 
+    function notificacaoItem(mensagem, tipo) {
+        setType(tipo)
+        setMsg(mensagem);
+        setAbrir(true);
+    }
 
     async function cadastrarItem() {
-        const item = {
-            name:nome,
-            photo:fotoCapa,
-            linkpagament:linkPagamento,
-            description:descricao,
-            price:preco,
-            linkvideo:linkVideo,
-            comments: []
-        };
-    
-        await setProgresso(true);
-        await Api.post(`items`, item).then(response => {
-            //notificacaoCadastroCliente();
-            adicionarItemNaCategoria(response.data._id);
-        });
-        await setProgresso(false);
+        if(validaCampoText([fotoCapa,nome,preco,linkPagamento,descricao])){
+            const item = {
+                name:nome,
+                photo:fotoCapa,
+                linkpagament:linkPagamento,
+                description:descricao,
+                price:preco,
+                linkvideo:validaCampoText([linkVideo])? linkVideo:'nulo',
+                comments: []
+            };
+        
+            await setProgresso(true);
+            await Api.post(`items`, item).then(response => {
+                notificacaoItem(`Produto ${response.data.name} cadastrado com sucesso.`, 'success');
+                adicionarItemNaCategoria(response.data._id);
+            }).catch(error => {
+                try {
+                    if(error.response.status == 400){
+                        notificacaoItem(`Não foi possível cadastrar o produto! Verifique os dados e tente novamente.`, 'danger');
+                    }else{
+                        notificacaoItem(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoItem(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
+            });
+            await setProgresso(false);
+        }else{
+            notificacaoItem(`Preencha todos os campos obrigatórios!`, 'danger');
+        }
     }
 
     async function adicionarItemNaCategoria(id) {
@@ -82,35 +112,67 @@ export default function CreateIten({ dado }) {
 
         await setProgresso(true);
         await Api.put(`categorys/${idCategoria}`, categoriaAtualizada).then(response => {
-            //notificacaoCadastroCliente();
+            
+        }).catch(error => {
+            try {
+                if(error.response.status == 400){
+                    notificacaoItem(`Não foi possível adicionar o produto na categoria! Exclua o produto e tente novamente`, 'danger');
+                }else{
+                    notificacaoItem(`Tivemos um problema: ${error}.`, 'danger');
+                }
+            } catch (error) {
+                notificacaoItem(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+            }
         });
         await setProgresso(false);
     }
 
     async function atualizarItem() {
-        const item = {
-            name:nome,
-            photo:fotoCapa,
-            linkpagament:linkPagamento,
-            description:descricao,
-            price:preco,
-            linkvideo:linkVideo,
-            comments: []
-        };
-    
-        await setProgresso(true);
-        await Api.put(`items/${id}`, item).then(response => {
-            //notificacaoCadastroCliente();
-            console.log('atualizado com sucesso!')
-        });
-        await setProgresso(false);
+        if(validaCampoText([fotoCapa,nome,preco,linkPagamento,descricao])){
+            const item = {
+                name:nome,
+                photo:fotoCapa,
+                linkpagament:linkPagamento,
+                description:descricao,
+                price:preco,
+                linkvideo: validaCampoText([linkVideo])? linkVideo:'nulo',
+                comments: []
+            };
+        
+            await setProgresso(true);
+            await Api.put(`items/${id}`, item).then(response => {
+                notificacaoItem(`Produto ${response.data.name} atualizado com sucesso.`, 'success');
+            }).catch(error => {
+                try {
+                    if(error.response.status == 400){
+                        notificacaoItem(`Não foi possível atualizar o produto! Verifique os dados e tente novamente.`, 'danger');
+                    }else{
+                        notificacaoItem(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoItem(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
+            });
+            await setProgresso(false);
+        }else{
+            notificacaoItem(`Preencha todos os campos obrigatórios!`, 'danger');
+        }
     }
 
     async function excluirItem() {
         await setProgresso(true);
         await Api.delete(`items/${id}`).then(response => {
-            //notificacaoCadastroCliente();
-            console.log('excluido com sucesso!')
+            notificacaoItem(`Produto excluído com sucesso.`, 'success');
+        }).catch(error => {
+            try {
+                if(error.response.status == 400){
+                    notificacaoItem(`Não foi possível excluir o produto! Tente novamente.`, 'danger');
+                }else{
+                    notificacaoItem(`Tivemos um problema: ${error}.`, 'danger');
+                }
+            } catch (error) {
+                notificacaoItem(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+            }
         });
         await setProgresso(false);
     }
@@ -126,6 +188,14 @@ export default function CreateIten({ dado }) {
             await setProgresso(true);
             await Api.get('categorys').then(response => {
                 setCategorys(response.data);
+            }).catch(error => {
+                try {
+                    if(error.response.status){
+                        notificacaoItem(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoItem(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
             });
             await setProgresso(false);
         }
@@ -134,6 +204,7 @@ export default function CreateIten({ dado }) {
 
     return (
         <Container fluid>
+            <Notification />
             <Carregando />
             <Row>
                 <Col xs={4} style={{borderWidth:'1px', borderStyle:'solid', borderColor:'#000', height:'80vh', boxShadow: "5px 5px 5px black", padding:'3vh', marginRight:'2vw', position:'relative', zIndex:1, overflow:'scroll'}}>
@@ -163,7 +234,7 @@ export default function CreateIten({ dado }) {
                         }
                         <Form.Group controlId="preco">
                             <Form.Label>Preço:</Form.Label>
-                            <Form.Control type="number" onChange={(event) => setPreco(event.target.value)} value={(parseFloat(preco)).toFixed(2)}/>
+                            <Form.Control type="number" onChange={(event) => setPreco(event.target.value)} value={parseFloat(preco)}/>
                         </Form.Group>
                         <Form.Group controlId="linkpagamento">
                             <Form.Label>Link pagamento:</Form.Label>
@@ -178,17 +249,29 @@ export default function CreateIten({ dado }) {
                             <Form.Control placeholder="Exemplo: https://youtube.com/meuvideo" onChange={(event) => setLinkVideo(event.target.value)} value={linkVideo}/>
                         </Form.Group>
                         {
+                            botaoConfirmacaoAtualizar?
+                                <p style={{color:'red'}}>Atualizar produto! Deseja continuar?</p>
+                            :
+                                <></>
+                        }
+                        {
+                            botaoConfirmacaoExcluir?
+                                <p style={{color:'red'}}>Excluir produto! Deseja continuar?</p>
+                            :
+                                <></>
+                        }
+                        {
                             dado.tipo == 'cadastrar'?
                                 <Button style={{margin:'2px'}} variant="primary" onClick={cadastrarItem}>
                                     Criar
                                 </Button>
                             :
                                 <>
-                                    <Button style={{margin:'2px'}} variant="info" onClick={atualizarItem}>
-                                        Atualizar
+                                    <Button style={{margin:'2px'}} variant="info" onClick={()=>{botaoConfirmacaoAtualizar? atualizarItem():setBotaoConfirmacaoAtualizar(true)}}>
+                                        {botaoConfirmacaoAtualizar? 'Confirmar':'Atualizar'}
                                     </Button>
-                                    <Button style={{margin:'2px'}} variant="outline-danger" onClick={excluirItem}>
-                                        Excluir
+                                    <Button style={{margin:'2px'}} variant="outline-danger" onClick={()=>{botaoConfirmacaoExcluir? excluirItem():setBotaoConfirmacaoExcluir(true)}}>
+                                        {botaoConfirmacaoExcluir? 'Confirmar':'Excluir'}
                                     </Button>
                                 </>
                         }
@@ -217,14 +300,19 @@ export default function CreateIten({ dado }) {
                                 <Card.Text style={{ textAlign: 'center' }}>{descricao}</Card.Text>
                             </Card.Body>
                         </Card>
-                        <Row border="secondary" className="justify-content-center" style={{ marginTop: '5vh', borderRadius: 10 }}>
-                            <iframe style={{
-                                width: '70vw',
-                                height: '50vh',
-                                borderRadius: 10,
-                                allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            }} src={linkVideo} />
-                        </Row>
+                        {
+                            linkVideo != 'nulo'?
+                                <Row border="secondary" className="justify-content-center" style={{ marginTop: '5vh', borderRadius: 10 }}>
+                                    <iframe style={{
+                                        width: '70vw',
+                                        height: '50vh',
+                                        borderRadius: 10,
+                                        allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    }} src={linkVideo} />
+                                </Row>
+                            :
+                            <></>
+                        }
                         <Accordion defaultActiveKey="0" style={{ marginTop: '5vh', borderRadius: 10, marginBottom: '10vh' }} >
                             <Card border="info">
                                 <Card.Header>

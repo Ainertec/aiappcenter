@@ -53,6 +53,9 @@ export default function CardItem({ dado }) {
                 <Card.Text>
                     {(dado.description).length < 60? dado.description:(dado.description).slice(0, 20)+'...'}
                 </Card.Text>
+                <h4 style={{color:'green'}}>
+                    <strong>R$ {(parseFloat(dado.price)).toFixed(2)}</strong>
+                </h4>
             </Card.Body>
             <Card.Footer style={{borderRadius:30}}>
                 <small className="text-muted">Para acessar este item </small>

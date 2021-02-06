@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from "react";
+import React, { useEffect }  from "react";
 import {
     Image,
     Row,
@@ -12,6 +12,7 @@ import { useBuscaItem } from "../../contexts/buscaItem";
 import { useProgresso } from "../../contexts/prog";
 import Carregando from "../../components/progress/carregando";
 import Notification from "../../components/notification/notification";
+import { useAlert } from '../../contexts/alertN';
 
 import Api from "../../services/api";
 
@@ -19,14 +20,27 @@ import NavBar from './navbar';
 import Carrousel from './carousel';
 import CardItem from './card';
 import FooterHome from './footer';
+import InfoHome from './info';
 
 export default function Home() {
     const { setProgresso } = useProgresso();
+    const { 
+        setAbrir,
+        setMsg,
+        setType,
+    } = useAlert();
     const {
         items,
         setItems,
         iniciarVariavelBuscaItem
     } = useBuscaItem();
+
+
+    function notificacaoHome(mensagem, tipo) {
+        setType(tipo)
+        setMsg(mensagem);
+        setAbrir(true);
+    }
 
     useEffect(() => {
         async function carregarProdutos() {
@@ -34,6 +48,14 @@ export default function Home() {
             await setProgresso(true);
             await Api.get('categorys').then(response => {
                 setItems(response.data);
+            }).catch(error => {
+                try {
+                    if(error.response.status){
+                        notificacaoHome(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoHome(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
             });
             await setProgresso(false);
           }
@@ -47,15 +69,16 @@ export default function Home() {
                 <Notification />
                 <Carregando />
                 <Carrousel />
-                <div style={{ marginBottom: '5vh', marginTop: '10vh', marginRight: '10vw', marginLeft: '10vw' }}>
+                <InfoHome />
+                <div style={{ marginBottom: '15vh', marginTop: '20vh', marginRight: '10vw', marginLeft: '10vw' }}>
                     {
                         items.map((option) =>(
                             <>
-                                <h3 style={{ textAlign: 'center', marginTop: '10vh' }}>{option.name}</h3>
+                                <h3 style={{ textAlign: 'center', marginTop: '15vh' }}>{option.name}</h3>
                                 <hr />
                                 <CardColumns>
-                                    {option.items.map((option2) => ( 
-                                            <CardItem dado={option2} key={option2._id}/>
+                                    {option.items.map((option2) => (
+                                        <CardItem dado={option2} key={option2._id}/>
                                     ))}
                                 </CardColumns>
                             </>
@@ -90,7 +113,7 @@ export default function Home() {
                         </div>
                     </Card.Body>
                 </Card>
-                <iframe className="w-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1845.9839984470989!2d-42.53371164127808!3d-22.2792021!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x978bb147eb5dcf%3A0xca79e78e1943f46e!2sNutricionista%20Jacqueline%20Thedim!5e0!3m2!1spt-BR!2sbr!4v1609108847949!5m2!1spt-BR!2sbr" style={{ height: '50vh', frameborder: 0, border: 0, allowfullscreen: "", ariaHidden: "false", tabindex: 0 }} />
+                <iframe className="w-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1845.9839984470989!2d-42.53371164127808!3d-22.2792021!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x978bb147eb5dcf%3A0xca79e78e1943f46e!2sNutricionista%20Jacqueline%20Thedim!5e0!3m2!1spt-BR!2sbr!4v1609108847949!5m2!1spt-BR!2sbr" style={{ height: '50vh', frameborder: 0, border: 0, allowfullscreen: "", ariaHidden: "false", tabindex: 0, marginTop:'10vh', marginBottom:'10vh' }} />
             </Container>
             <FooterHome />
         </div>

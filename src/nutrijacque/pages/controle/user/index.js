@@ -47,12 +47,20 @@ export default function UserUpdate({ dado }) {
                 response,
                 admin:true
             };
-    
-            console.log(user)
         
             await setProgresso(true);
             await Api.put(`users/${idUser}`, user).then(response => {
                 notificacaoUsuario(`Usuário ${response.data.username} atualizado com sucesso!`,'success');
+            }).catch(error => {
+                try {
+                    if(error.response.status == 400){
+                        notificacaoUsuario(`Não foi possível atualizar o usuário! Verifique os dados e tente novamente`, 'danger');
+                    }else{
+                        notificacaoUsuario(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoUsuario(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
             });
             await setProgresso(false);
             signOut();

@@ -16,6 +16,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useItem } from "../../../contexts/item";
 import Carregando from "../../../components/progress/carregando";
 import { useProgresso } from "../../../contexts/prog";
+import Notification from "../../../components/notification/notification";
+import { useAlert } from '../../../contexts/alertN';
+import { useValidation } from '../../../validation/validation';
 
 import CreateIten from './index';
 
@@ -24,6 +27,12 @@ import Api from "../../../services/api";
 
 export default function ListIten() {
     const { setProgresso } = useProgresso();
+    const { 
+        setAbrir,
+        setMsg,
+        setType,
+    } = useAlert();
+    const { validaCampoText } = useValidation();
     const[items, setItems] = useState([]);
     const[busca, setBusca] = useState('');
     const [show, setShow] = useState(false);
@@ -39,6 +48,11 @@ export default function ListIten() {
         iniciarVariaveisItem
     } = useItem();
 
+    function notificacaoItem(mensagem, tipo) {
+        setType(tipo)
+        setMsg(mensagem);
+        setAbrir(true);
+    }
 
     const handleClose = () => (setShow(false),iniciarVariaveisItem());
     const handleShow = () => setShow(true);
@@ -47,16 +61,36 @@ export default function ListIten() {
         await setProgresso(true);
         await Api.get('items').then(response => {
             setItems(response.data);
+        }).catch(error => {
+            try {
+                if(error.response.status){
+                    notificacaoItem(`Tivemos um problema: ${error}.`, 'danger');
+                }
+            } catch (error) {
+                notificacaoItem(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+            }
         });
         await setProgresso(false);
     }
 
     async function exibirPorNome(){
-        await setProgresso(true);
-        await Api.get(`items/${busca}`).then(response => {
-            setItems(response.data);
-        });
-        await setProgresso(false);
+        if(validaCampoText([busca])){
+            await setProgresso(true);
+            await Api.get(`items/${busca}`).then(response => {
+                setItems(response.data);
+            }).catch(error => {
+                try {
+                    if(error.response.status){
+                        notificacaoItem(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoItem(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
+            });
+            await setProgresso(false);
+        }else{
+            notificacaoItem(`Preencha a busca!`, 'danger');  
+        }
     }
 
     function exibiId(id){
@@ -75,6 +109,7 @@ export default function ListIten() {
 
     return (
         <Container fluid>
+            <Notification />
             <Carregando />
             <h4 style={{textAlign:'center', marginBottom:'3vh'}}>Listagem de produtos</h4>
             <Row>

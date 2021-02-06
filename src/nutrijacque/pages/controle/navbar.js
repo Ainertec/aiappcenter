@@ -5,14 +5,27 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useAuth } from "../../contexts/auth";
+import { useAlert } from '../../contexts/alertN';
 
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 export default function NavBar() {
     const { signOut } = useAuth();
+    const { 
+        setAbrir,
+        setMsg,
+        setType,
+    } = useAlert();
+
+    function notificacaoNavBar(mensagem, tipo) {
+        setType(tipo)
+        setMsg(mensagem);
+        setAbrir(true);
+    }
 
     const handleMenuSignOut = () => {
         signOut();
+        notificacaoNavBar('Logout efetuado com sucesso!','success');
       };
 
     return (

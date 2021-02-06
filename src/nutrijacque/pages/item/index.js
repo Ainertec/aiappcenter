@@ -17,6 +17,9 @@ import { useHistory } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import Carregando from "../../components/progress/carregando";
 import { useProgresso } from "../../contexts/prog";
+import Notification from "../../components/notification/notification";
+import { useAlert } from '../../contexts/alertN';
+import { useValidation } from '../../validation/validation';
 
 import DescriptionIcon from '@material-ui/icons/Description';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -30,6 +33,7 @@ import Api from "../../services/api";
 import NavBar from './navbar';
 import { useItem } from "../../contexts/item";
 
+
 export default function ItemSelected() {
 
     const history = useHistory();
@@ -38,6 +42,12 @@ export default function ItemSelected() {
     };
 
     const { setProgresso } = useProgresso();
+    const { 
+        setAbrir,
+        setMsg,
+        setType,
+    } = useAlert();
+    const { validaCampoText } = useValidation();
     const [nomeAvaliacao, setNomeAvaliacao] = useState('');
     const [mensageAvaliacao, setMensageAvaliacao] = useState('');
     const {
@@ -52,32 +62,53 @@ export default function ItemSelected() {
         comments,
     } = useItem();
 
-    async function enviarAvaliacao(){
-        await setProgresso(true);
-        const newAvaliacao = {
-            name:nomeAvaliacao,
-            mensage:mensageAvaliacao
-        }
-        let todasAvalicoes = [];
-        for(const comment of comments){
-            todasAvalicoes.push({
-                name:comment.name,
-                mensage:comment.mensage
-            })
-        }
-        todasAvalicoes.push(newAvaliacao);
+    function notificacaoItem(mensagem, tipo) {
+        setType(tipo)
+        setMsg(mensagem);
+        setAbrir(true);
+    }
 
-        await Api.put(`itemscomments/${id}`, {comments:todasAvalicoes}).then(response => {
-            console.log(response.data)
-        })
-        await setProgresso(false);
-        handleToHome();
+    async function enviarAvaliacao(){
+        if(validaCampoText([nomeAvaliacao,mensageAvaliacao])){
+            await setProgresso(true);
+            const newAvaliacao = {
+                name:nomeAvaliacao,
+                mensage:mensageAvaliacao
+            }
+            let todasAvalicoes = [];
+            for(const comment of comments){
+                todasAvalicoes.push({
+                    name:comment.name,
+                    mensage:comment.mensage
+                })
+            }
+            todasAvalicoes.push(newAvaliacao);
+
+            await Api.put(`itemscomments/${id}`, {comments:todasAvalicoes}).then(response => {
+                notificacaoItem(`Comentário adicionado com sucesso!`, 'success');
+            }).catch(error => {
+                try {
+                    if(error.response.status == 400){
+                        notificacaoItem(`Não foi possível adicionar seu comentário! Tente novamente.`, 'danger');
+                    }else{
+                        notificacaoItem(`Tivemos um problema: ${error}.`, 'danger');
+                    }
+                } catch (error) {
+                    notificacaoItem(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                }
+            });
+            await setProgresso(false);
+            handleToHome();
+        }else{
+            notificacaoItem(`Preencha os campos seu nome e comentário!`, 'danger'); 
+        }
     }
 
     return (
         <div>
             <NavBar />
             <Container fluid>
+                <Notification />
                 <Carregando />
                 <Media style={{ marginRight: '10vw', marginLeft: '10vw', marginTop: '5vh', boxShadow: "5px 5px 5px black", borderRadius: 10 }}>
                     <img
@@ -88,7 +119,7 @@ export default function ItemSelected() {
                     <Media.Body className="mr-3">
                         <h5 style={{ marginBottom: '5vh' }}><u>{nome}</u></h5>
                         <p>Criado em: {format(parseISO(createdAt), 'dd/MM/yyyy HH:mm:ss')}</p>
-                        <h3 style={{ color: 'red', marginBottom: '5vh' }}>R${(parseFloat(preco)).toFixed(2)}</h3>
+                        <h2 style={{ color: 'green', marginBottom: '5vh' }}><strong>R${(parseFloat(preco)).toFixed(2)}</strong></h2>
                         <Button onClick={() => { alert(`Aqui vc será direcionado para o pagamento no link${linkPagamento}`) }} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="warning" size="lg" block>
                             <ShoppingCartIcon /> Comprar
                         </Button>
@@ -102,14 +133,19 @@ export default function ItemSelected() {
                         </Card.Text>
                     </Card.Body>
                 </Card>
-                <Row border="secondary" className="justify-content-center" style={{ marginRight: '10vw', marginLeft: '10vw', marginTop: '5vh', borderRadius: 10 }}>
-                    <iframe style={{
-                        width: '70vw',
-                        height: '50vh',
-                        borderRadius: 10,
-                        allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    }} src={linkVideo} />
-                </Row>
+                {
+                    linkVideo != 'nulo'?
+                        <Row border="secondary" className="justify-content-center" style={{ marginRight: '10vw', marginLeft: '10vw', marginTop: '5vh', borderRadius: 10 }}>
+                            <iframe style={{
+                                width: '70vw',
+                                height: '50vh',
+                                borderRadius: 10,
+                                allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            }} src={linkVideo} />
+                        </Row>
+                    :
+                    <></>
+                }
                 <Accordion defaultActiveKey="0" style={{ marginRight: '10vw', marginLeft: '10vw', marginTop: '5vh', borderRadius: 10, marginBottom: '10vh' }} >
                     <Card border="info">
                         <Card.Header>
