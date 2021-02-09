@@ -21,6 +21,8 @@ import { useAlert } from '../../../contexts/alertN';
 import { useValidation } from '../../../validation/validation';
 
 import CreateIten from './index';
+import SearchIcon from '@material-ui/icons/Search';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 
 import Api from "../../../services/api";
 
@@ -45,6 +47,7 @@ export default function ListIten() {
         setDescricao,
         setLinkVideo,
         setCreatedAt,
+        setComments,
         iniciarVariaveisItem
     } = useItem();
 
@@ -104,6 +107,7 @@ export default function ListIten() {
         setDescricao(result.description);
         setLinkVideo(result.linkvideo);
         setCreatedAt(result.createdAt);
+        setComments(result.comments);
         handleShow();
     }
 
@@ -121,8 +125,8 @@ export default function ListIten() {
                                 onChange={(event) => setBusca(event.target.value)}
                             />
                             <InputGroup.Append>
-                                <Button variant="outline-info" onClick={exibirPorNome}>Buscar</Button>
-                                <Button variant="outline-info" onClick={exibirTodos}>Exibir todos</Button>
+                                <Button variant="outline-info" onClick={exibirPorNome}><SearchIcon /> Buscar</Button>
+                                <Button variant="outline-info" onClick={exibirTodos}><SearchIcon /> Exibir todos</Button>
                             </InputGroup.Append>
                         </InputGroup>
                         <ListGroup style={{marginTop:'5vh'}}>
@@ -145,7 +149,7 @@ export default function ListIten() {
                                     ))
                                 :
                                     <Alert variant="warning">
-                                        Nenhum item listado!
+                                        <SentimentVeryDissatisfiedIcon /> Nenhum item listado!
                                     </Alert>
                             }
                         </ListGroup>

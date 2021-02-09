@@ -15,6 +15,8 @@ import Notification from "../../../components/notification/notification";
 import { useAlert } from '../../../contexts/alertN';
 import { useValidation } from '../../../validation/validation';
 
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+
 import Api from "../../../services/api";
 
 export default function UserUpdate({ dado }) {
@@ -111,7 +113,7 @@ export default function UserUpdate({ dado }) {
                             </Form.Group>
                         </Form.Row>
                     </Form>
-                    <Button variant="primary" onClick={atualizarUser}>Atualizar</Button>
+                    <Button variant="primary" onClick={atualizarUser}><DoneAllIcon /> Atualizar</Button>
                 </Card.Body>
             </Card>
         </Container>

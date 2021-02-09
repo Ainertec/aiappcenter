@@ -20,7 +20,8 @@ export default function InfoHome() {
                 <Card.Body>
                     <h4 style={{textAlign:'center', marginTop:'5vh', marginBottom:'5vh', textShadow: '0.1em 0.1em 0.2em black'}}>Entre em contato ou veja mais sobre Jacqueline Thedim</h4>
                     <h5 style={{textAlign:'center', textShadow: '0.1em 0.1em 0.2em black'}}>Jacqueline Thedim</h5>
-                    <h5 style={{textAlign:'center', marginBottom:'5vh', textShadow: '0.1em 0.1em 0.2em black'}}>CRN 00000.00</h5>
+                    <h6 style={{textAlign:'center', textShadow: '0.1em 0.1em 0.2em black'}}>CRN 08101700</h6>
+                    <h5 style={{textAlign:'center', marginBottom:'5vh', textShadow: '0.1em 0.1em 0.2em black'}}>Nutricionista Clínica Funcional e Comportamental</h5>
                     <Row>
                         <Col>
                             <Card.Img variant="top" style={{borderTopLeftRadius: '8vw', borderBottomRightRadius: '8vw'}} src="https://i.ibb.co/7nvW8k0/78536840-3028078534083247-390361747808059392-o.jpg" />

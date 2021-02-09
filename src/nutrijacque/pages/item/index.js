@@ -120,7 +120,7 @@ export default function ItemSelected() {
                         <h5 style={{ marginBottom: '5vh' }}><u>{nome}</u></h5>
                         <p>Criado em: {format(parseISO(createdAt), 'dd/MM/yyyy HH:mm:ss')}</p>
                         <h2 style={{ color: 'green', marginBottom: '5vh' }}><strong>R${(parseFloat(preco)).toFixed(2)}</strong></h2>
-                        <Button onClick={() => { alert(`Aqui vc será direcionado para o pagamento no link${linkPagamento}`) }} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="warning" size="lg" block>
+                        <Button onClick={() => window.open(linkPagamento, '_blank')} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="warning" size="lg" block>
                             <ShoppingCartIcon /> Comprar
                         </Button>
                     </Media.Body>

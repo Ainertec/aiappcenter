@@ -13,6 +13,10 @@ import Notification from "../../../components/notification/notification";
 import { useAlert } from '../../../contexts/alertN';
 import { useValidation } from '../../../validation/validation';
 
+import CheckIcon from '@material-ui/icons/Check';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+
 import Api from "../../../services/api";
 import { useCategory } from "../../../contexts/category";
 
@@ -154,16 +158,16 @@ export default function CreateCategory({ dado }) {
                         }
                         {
                             dado.tipo=='cadastrar'?
-                                <Button style={{margin:'2px'}} variant="primary" onClick={cadastrarCategoria}>
-                                    Criar
+                                <Button size="sm" style={{margin:'2px'}} variant="primary" onClick={cadastrarCategoria}>
+                                    <CheckIcon /> Criar
                                 </Button>
                             :
                                 <>
-                                    <Button style={{margin:'2px'}} variant="info" onClick={()=>{botaoConfirmacaoAtualizar? atualizarCategoria():setBotaoConfirmacaoAtualizar(true)}}>
-                                    {botaoConfirmacaoAtualizar? 'Confirmar':'Atualizar'}
+                                    <Button size="sm" style={{margin:'2px'}} variant={botaoConfirmacaoAtualizar? "warning":"info"} onClick={()=>{botaoConfirmacaoAtualizar? atualizarCategoria():setBotaoConfirmacaoAtualizar(true)}}>
+                                        {botaoConfirmacaoAtualizar? <><CheckIcon /> Confirmar</>:<><DoneAllIcon /> Atualizar</>}
                                     </Button>
-                                    <Button style={{margin:'2px'}} variant="outline-danger" onClick={()=>{botaoConfirmacaoAtualizar? excluirCategoria():setBotaoConfirmacaoExcluir(true)}} >
-                                        {botaoConfirmacaoExcluir? 'Confirmar':'Excluir'}
+                                    <Button size="sm" style={{margin:'2px'}} variant={botaoConfirmacaoExcluir? "warning":"outline-danger"} onClick={()=>{botaoConfirmacaoExcluir? excluirCategoria():setBotaoConfirmacaoExcluir(true)}} >
+                                        {botaoConfirmacaoExcluir? <><CheckIcon /> Confirmar</>:<><DeleteForeverIcon /> Excluir</>}
                                     </Button>
                                 </>
                         }

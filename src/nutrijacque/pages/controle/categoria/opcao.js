@@ -17,6 +17,9 @@ import Notification from "../../../components/notification/notification";
 import { useAlert } from '../../../contexts/alertN';
 import { useValidation } from '../../../validation/validation';
 
+import SearchIcon from '@material-ui/icons/Search';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+
 import { useCategory } from "../../../contexts/category";
 import CreateCategory from './index';
 
@@ -89,7 +92,6 @@ export default function ListCategory() {
 
     function selecionarCategoria(id){
         const result = categorys.find(element => element._id == id);
-        console.log(result);
         setId(result._id);
         setName(result.name);
         setItems(result.items);
@@ -110,8 +112,8 @@ export default function ListCategory() {
                                 onChange={(event) => setBusca(event.target.value)}
                             />
                             <InputGroup.Append>
-                                <Button variant="outline-info" onClick={exibirPorNome}>Buscar</Button>
-                                <Button variant="outline-info" onClick={exibirTodos}>Exibir todos</Button>
+                                <Button size="sm" variant="outline-info" onClick={exibirPorNome}><SearchIcon /> Buscar</Button>
+                                <Button size="sm" variant="outline-info" onClick={exibirTodos}><SearchIcon /> Exibir todos</Button>
                             </InputGroup.Append>
                         </InputGroup>
                         <ListGroup style={{marginTop:'5vh'}}>
@@ -124,7 +126,7 @@ export default function ListCategory() {
                                     ))
                                 :
                                     <Alert variant="warning">
-                                        Nenhuma categoria listada!
+                                        <SentimentVeryDissatisfiedIcon /> Nenhuma categoria listada!
                                     </Alert>
                             }
                         </ListGroup>

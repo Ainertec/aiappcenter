@@ -20,6 +20,8 @@ import Api from '../../services/api';
 
 import SecurityIcon from '@material-ui/icons/Security';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 
 import NavBar from './navbar';
 
@@ -147,7 +149,7 @@ export default function Login() {
                 </Card>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
-                    <Modal.Title>Recuperar conta</Modal.Title>
+                    <Modal.Title><LockOpenIcon /> Recuperar conta</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <h6>Responda a pergunta: {question}</h6>
@@ -161,7 +163,7 @@ export default function Login() {
                                 <Form.Control type="password" placeholder="Entre com a nova senha." onChange={event => setNewPassword(event.target.value)} value={newPassword} />
                             </Form.Group>
                             <Button onClick={recuperarSenhaConta} style={{ marginRight: '1vw', marginBottom: '1vh' }} variant="success" size="lg" block>
-                                Atualizar
+                                <VerifiedUserIcon /> Atualizar
                             </Button>
                         </Form>
                     </Modal.Body>

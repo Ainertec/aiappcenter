@@ -14,6 +14,8 @@ import Carregando from "../../components/progress/carregando";
 import Notification from "../../components/notification/notification";
 import { useAlert } from '../../contexts/alertN';
 
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+
 import Api from "../../services/api";
 
 import NavBar from './navbar';
@@ -89,7 +91,7 @@ export default function Home() {
                             null
                         :
                             <Alert variant="warning">
-                                Não existe produtos!
+                                <SentimentVeryDissatisfiedIcon /> Nenhum produto disponível!
                             </Alert>
                     }
                 </div>

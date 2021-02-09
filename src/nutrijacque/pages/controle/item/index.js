@@ -8,6 +8,7 @@ import {
     Media,
     Card,
     Accordion,
+    Table
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Carregando from "../../../components/progress/carregando";
@@ -23,6 +24,9 @@ import { useItem } from "../../../contexts/item";
 import DescriptionIcon from '@material-ui/icons/Description';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CommentIcon from '@material-ui/icons/Comment';
+import CheckIcon from '@material-ui/icons/Check';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
 
 
 export default function CreateIten({ dado }) {
@@ -52,6 +56,8 @@ export default function CreateIten({ dado }) {
         linkVideo,
         setLinkVideo,
         createdAt,
+        setComments,
+        comments,
         iniciarVariaveisItem
     } = useItem();
 
@@ -136,7 +142,7 @@ export default function CreateIten({ dado }) {
                 description:descricao,
                 price:preco,
                 linkvideo: validaCampoText([linkVideo])? linkVideo:'nulo',
-                comments: []
+                comments
             };
         
             await setProgresso(true);
@@ -175,6 +181,20 @@ export default function CreateIten({ dado }) {
             }
         });
         await setProgresso(false);
+    }
+
+    function removerComentario(id) {
+        const newComments = [];
+        let comentarioInvalido = null;
+        for (const item of comments) {
+            if(item._id != id){
+                newComments.push({'name':item.name,'mensage':item.mensage})
+            }else{
+                comentarioInvalido = item;
+            }
+        }
+        setComments(newComments);
+        notificacaoItem(`Comentário de ${comentarioInvalido.name} removido, clique em atualizar para salvar as alterações!.`, 'success');
     }
     
     useEffect(() => {
@@ -248,6 +268,33 @@ export default function CreateIten({ dado }) {
                             <Form.Label>Link vídeo:</Form.Label>
                             <Form.Control placeholder="Exemplo: https://youtube.com/meuvideo" onChange={(event) => setLinkVideo(event.target.value)} value={linkVideo}/>
                         </Form.Group>
+                        <Form.Group controlId="controledecomentarios">
+                            <Form.Label>Comentários:</Form.Label>
+                            <Table striped bordered hover size="sm" variant="dark">
+                                <thead>
+                                    <tr>
+                                        <td>Nome</td>
+                                        <td>Comentário</td>
+                                        <td>Excluir</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        comments.map((item) => (
+                                            <tr>
+                                                <td>{item.name}</td>
+                                                <td>{item.mensage}</td>
+                                                <td>
+                                                    <Button variant="outline-danger" size="sm" onClick={()=>{removerComentario(item._id)}}>
+                                                        Excluir
+                                                    </Button>
+                                                </td>
+                                            </tr>       
+                                        ))
+                                    }
+                                </tbody>
+                            </Table>
+                        </Form.Group>
                         {
                             botaoConfirmacaoAtualizar?
                                 <p style={{color:'red'}}>Atualizar produto! Deseja continuar?</p>
@@ -262,16 +309,16 @@ export default function CreateIten({ dado }) {
                         }
                         {
                             dado.tipo == 'cadastrar'?
-                                <Button style={{margin:'2px'}} variant="primary" onClick={cadastrarItem}>
-                                    Criar
+                                <Button size="sm" style={{margin:'2px'}} variant="primary" onClick={cadastrarItem}>
+                                    <CheckIcon />Criar
                                 </Button>
                             :
                                 <>
-                                    <Button style={{margin:'2px'}} variant="info" onClick={()=>{botaoConfirmacaoAtualizar? atualizarItem():setBotaoConfirmacaoAtualizar(true)}}>
-                                        {botaoConfirmacaoAtualizar? 'Confirmar':'Atualizar'}
+                                    <Button style={{margin:'2px'}} variant={botaoConfirmacaoAtualizar? "warning":"info"} onClick={()=>{botaoConfirmacaoAtualizar? atualizarItem():setBotaoConfirmacaoAtualizar(true)}}>
+                                        {botaoConfirmacaoAtualizar? <><CheckIcon /> Confirmar</>:<><DoneAllIcon /> Atualizar</>}
                                     </Button>
-                                    <Button style={{margin:'2px'}} variant="outline-danger" onClick={()=>{botaoConfirmacaoExcluir? excluirItem():setBotaoConfirmacaoExcluir(true)}}>
-                                        {botaoConfirmacaoExcluir? 'Confirmar':'Excluir'}
+                                    <Button style={{margin:'2px'}} variant={botaoConfirmacaoExcluir? "warning":"outline-danger"} onClick={()=>{botaoConfirmacaoExcluir? excluirItem():setBotaoConfirmacaoExcluir(true)}}>
+                                        {botaoConfirmacaoExcluir? <><CheckIcon /> Confirmar</>:<><DeleteForeverIcon /> Excluir</>}
                                     </Button>
                                 </>
                         }
