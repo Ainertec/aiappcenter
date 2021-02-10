@@ -266,7 +266,7 @@ export default function CreateIten({ dado }) {
                         </Form.Group>
                         <Form.Group controlId="linkvideo">
                             <Form.Label>Link vídeo:</Form.Label>
-                            <Form.Control placeholder="Exemplo: https://youtube.com/meuvideo" onChange={(event) => setLinkVideo(event.target.value)} value={linkVideo}/>
+                            <Form.Control placeholder="Exemplo: https://youtube.com/meuvideo" onChange={(event) => setLinkVideo((event.target.value).replace('watch?v=','embed/'))} value={linkVideo}/>
                         </Form.Group>
                         <Form.Group controlId="controledecomentarios">
                             <Form.Label>Comentários:</Form.Label>
