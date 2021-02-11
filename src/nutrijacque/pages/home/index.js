@@ -14,7 +14,7 @@ import Carregando from "../../components/progress/carregando";
 import Notification from "../../components/notification/notification";
 import { useAlert } from '../../contexts/alertN';
 
-import { Fade, FadeCard, FadeImg, FadeText } from './style';
+import { Fade, FadeCard, FadeImg, FadeText, FadeCarrousel, FadeNavBar } from './style';
 
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 
@@ -68,11 +68,15 @@ export default function Home() {
 
     return (
         <div>
-            <NavBar />
+            <FadeNavBar>
+                <NavBar />
+            </FadeNavBar>
             <Container fluid>
                 <Notification />
                 <Carregando />
-                <Carrousel />
+                <FadeCarrousel>
+                    <Carrousel />
+                </FadeCarrousel>
                 <Fade>
                     <InfoHome />
                 </Fade>
