@@ -14,6 +14,8 @@ import Carregando from "../../components/progress/carregando";
 import Notification from "../../components/notification/notification";
 import { useAlert } from '../../contexts/alertN';
 
+import { Fade, FadeCard, FadeImg, FadeText } from './style';
+
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 
 import Api from "../../services/api";
@@ -71,7 +73,9 @@ export default function Home() {
                 <Notification />
                 <Carregando />
                 <Carrousel />
-                <InfoHome />
+                <Fade>
+                    <InfoHome />
+                </Fade>
                 <div style={{ marginBottom: '15vh', marginTop: '20vh', marginRight: '10vw', marginLeft: '10vw' }}>
                     {
                         items.map((option) =>(
@@ -80,7 +84,9 @@ export default function Home() {
                                 <hr />
                                 <CardColumns>
                                     {option.items.map((option2) => (
-                                        <CardItem dado={option2} key={option2._id}/>
+                                        <FadeCard>
+                                            <CardItem dado={option2} key={option2._id}/>
+                                        </FadeCard>
                                     ))}
                                 </CardColumns>
                             </>
@@ -98,16 +104,28 @@ export default function Home() {
                 <Card>
                     <Card.Body style={{ opacity: 0.8, backgroundRepeat: 'no-repeat', backgroundSize: '100vw', backgroundImage: 'url("https://i.ibb.co/8m40M4w/64747668-2874961069394995-8285739337077751808-n.png")' }}>
                         <Row className="justify-content-center">
-                            <Image style={{ opacity: 1, width: '18vh', marginTop: '8vh', borderRadius: 20, boxShadow: "5px 5px 5px black" }} src="https://i.ibb.co/xspvVhk/133115937-3426915024199594-7142885507613308075-o.jpg" />
+                            <FadeImg>
+                                <Image style={{ opacity: 1, width: '18vh', marginTop: '8vh', borderRadius: 20, boxShadow: "5px 5px 5px black" }} src="https://i.ibb.co/xspvVhk/133115937-3426915024199594-7142885507613308075-o.jpg" />
+                            </FadeImg>
                         </Row>
                         <div style={{ padding: '1vw', backgroundColor: '#000', borderRadius: 20, marginTop: '2vh', }}>
                             <h5 style={{ textAlign: "center", marginBottom: '5vh', color: '#FFF' }}>Jacqueline Thedim</h5>
                             <p style={{ marginRight: '10vw', marginLeft: '10vw', textAlign: 'center', color: '#FFF' }}>
+                                <FadeText>
                                 "Sou simplesmente apaixonada pela minha missão de Nutri! Mudar a vida das pessoas através da alimentação é incrível! Sabemos que uma alimentação saudável pode gerar muitos benefícios em nossa saúde, mas o que muita gente não sabe é que isto pode ser simples e descomplicado. E esta é minha missão ajudar as pessoas a mudarem seu comportamento em relação à comida para ter mais saúde, mais disposição, melhorar a auto estima, parar de brigar com a balança, e assim aprender a comer de tudo e ter um peso saudável.
+                                </FadeText>
+                                <FadeText>
                                 Faço sim a 10 anos com muito carinho, dedicação e responsabilidade! Sou especialista em Nutrição Funcional, em obesidade e emagrecimento e trabalho com nutrição comportamental.
+                                </FadeText>
+                                <FadeText>
                                 Trabalho sempre com avaliação física completa, porque mais que o peso é necessário também avaliar a qualidade deste peso. Assim medidas e saber como está sua massa gorda e magra é super importante.
+                                </FadeText>
+                                <FadeText>
                                 Minhas orientações, planos alimentares ou dietas, são sempre individuais, personalizadas e montadas junto com meu paciente, para que ele possa opinar e entender todo o processo de mudança de alimentação.
+                                </FadeText>
+                                <FadeText>
                                 Então vamos melhorar sua alimentação...."
+                                </FadeText>
                             </p>
                             <div style={{ marginRight: '10vw', marginLeft: '10vw' }} className="blockquote-footer">
                                 <cite>·QUARTA-FEIRA, 19 DE JUNHO DE 2019·</cite>

@@ -16,6 +16,7 @@ import { useProgresso } from "../../../contexts/prog";
 import Notification from "../../../components/notification/notification";
 import { useAlert } from '../../../contexts/alertN';
 import { useValidation } from '../../../validation/validation';
+import { useNavigationControler } from '../../../contexts/navigationControler';
 
 import Api from "../../../services/api";
 import { useItem } from "../../../contexts/item";
@@ -37,6 +38,9 @@ export default function CreateIten({ dado }) {
         setType,
     } = useAlert();
     const { validaCampoText } = useValidation();
+    const {
+        setNavegacao,
+    } = useNavigationControler();
     const [categorys, setCategorys] = useState([]);
     const [ idCategoria, setIdCategoria] = useState('');
     const [ botaoConfirmacaoAtualizar, setBotaoConfirmacaoAtualizar] = useState(false);
@@ -118,7 +122,7 @@ export default function CreateIten({ dado }) {
 
         await setProgresso(true);
         await Api.put(`categorys/${idCategoria}`, categoriaAtualizada).then(response => {
-            
+            setNavegacao(0);
         }).catch(error => {
             try {
                 if(error.response.status == 400){
@@ -135,6 +139,10 @@ export default function CreateIten({ dado }) {
 
     async function atualizarItem() {
         if(validaCampoText([fotoCapa,nome,preco,linkPagamento,descricao])){
+            const removeIdComments = [];
+            for (const item of comments) {
+                removeIdComments.push({'name':item.name,'mensage':item.mensage})
+            }
             const item = {
                 name:nome,
                 photo:fotoCapa,
@@ -142,12 +150,13 @@ export default function CreateIten({ dado }) {
                 description:descricao,
                 price:preco,
                 linkvideo: validaCampoText([linkVideo])? linkVideo:'nulo',
-                comments
+                comments: removeIdComments
             };
         
             await setProgresso(true);
             await Api.put(`items/${id}`, item).then(response => {
                 notificacaoItem(`Produto ${response.data.name} atualizado com sucesso.`, 'success');
+                setNavegacao(0);
             }).catch(error => {
                 try {
                     if(error.response.status == 400){
@@ -169,6 +178,7 @@ export default function CreateIten({ dado }) {
         await setProgresso(true);
         await Api.delete(`items/${id}`).then(response => {
             notificacaoItem(`Produto excluído com sucesso.`, 'success');
+            setNavegacao(0);
         }).catch(error => {
             try {
                 if(error.response.status == 400){

@@ -12,6 +12,7 @@ import { useProgresso } from "../../../contexts/prog";
 import Notification from "../../../components/notification/notification";
 import { useAlert } from '../../../contexts/alertN';
 import { useValidation } from '../../../validation/validation';
+import { useNavigationControler } from '../../../contexts/navigationControler';
 
 import CheckIcon from '@material-ui/icons/Check';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -28,6 +29,9 @@ export default function CreateCategory({ dado }) {
         setType,
     } = useAlert();
     const { validaCampoText } = useValidation();
+    const {
+        setNavegacao,
+    } = useNavigationControler();
     const [ botaoConfirmacaoAtualizar, setBotaoConfirmacaoAtualizar] = useState(false);
     const [ botaoConfirmacaoExcluir, setBotaoConfirmacaoExcluir] = useState(false);
     const {
@@ -57,6 +61,7 @@ export default function CreateCategory({ dado }) {
             await setProgresso(true);
             await Api.post(`categorys`, category).then(response => {
                 notificacaoCategoria(`Categoria ${response.data.name} cadastrada com sucesso.`, 'success');
+                setNavegacao(3);
             }).catch(error => {
                 try {
                     if(error.response.status == 400){
@@ -89,6 +94,7 @@ export default function CreateCategory({ dado }) {
             await setProgresso(true);
             await Api.put(`categorys/${id}`, category).then(response => {
                 notificacaoCategoria(`Categoria ${response.data.name} atualizada com sucesso.`, 'success');
+                setNavegacao(0);
             }).catch(error => {
                 try {
                     if(error.response.status == 400){
@@ -110,6 +116,7 @@ export default function CreateCategory({ dado }) {
         await setProgresso(true);
         await Api.delete(`categorys/${id}`).then(response => {
             notificacaoCategoria(`Categoria excluida com sucesso.`, 'success');
+            setNavegacao(0);
         }).catch(error => {
                 try {
                     if(error.response.status == 400){

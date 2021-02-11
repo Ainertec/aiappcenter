@@ -125,8 +125,8 @@ export default function ListIten() {
                                 onChange={(event) => setBusca(event.target.value)}
                             />
                             <InputGroup.Append>
-                                <Button variant="outline-info" onClick={exibirPorNome}><SearchIcon /> Buscar</Button>
-                                <Button variant="outline-info" onClick={exibirTodos}><SearchIcon /> Exibir todos</Button>
+                                <Button size="sm" variant="outline-info" onClick={exibirPorNome}><SearchIcon /> Buscar</Button>
+                                <Button size="sm" variant="outline-info" onClick={exibirTodos}><SearchIcon /> Exibir todos</Button>
                             </InputGroup.Append>
                         </InputGroup>
                         <ListGroup style={{marginTop:'5vh'}}>

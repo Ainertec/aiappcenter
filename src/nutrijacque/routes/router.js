@@ -6,9 +6,9 @@ import { ItemProvider } from "../contexts/item";
 import { BuscaItemProvider } from "../contexts/buscaItem";
 import { AuthProvider } from "../contexts/auth";
 import { AlertProvider } from "../contexts/alertN";
-//import { UserProvider } from "../contexts/user";
 import { ProgressoProvider } from "../contexts/prog";
 import { ValidationProvider } from '../validation/validation';
+import { NavigationControlerProvider } from '../contexts/navigationControler';
 
 export default function RotasMcDonuts() {
     return (
@@ -19,7 +19,9 @@ export default function RotasMcDonuts() {
                         <CategoryProvider>
                             <ItemProvider>
                                 <BuscaItemProvider>
-                                    <RotaNutriJacque />
+                                    <NavigationControlerProvider>
+                                        <RotaNutriJacque />
+                                    </NavigationControlerProvider>
                                 </BuscaItemProvider>
                             </ItemProvider>
                         </CategoryProvider>
@@ -29,21 +31,3 @@ export default function RotasMcDonuts() {
         </AuthProvider>
     );
 }
-
-/*
-        <AuthProvider>
-            <CartProvider>
-                <AlertProvider>
-                    <UserProvider>
-                        <ProgressoProvider>
-                            <ValidationProvider>
-                                <LojaOpenProvider>
-                                    <RotaMcDonuts />
-                                </LojaOpenProvider>
-                            </ValidationProvider>
-                        </ProgressoProvider>
-                    </UserProvider>
-                </AlertProvider>
-            </CartProvider>
-        </AuthProvider>
-*/
