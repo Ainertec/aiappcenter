@@ -17,6 +17,7 @@ import { useAlert } from '../../contexts/alertN';
 import { Fade, FadeCard, FadeImg, FadeText, FadeCarrousel, FadeNavBar } from './style';
 
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 
 import Api from "../../services/api";
 
@@ -25,6 +26,7 @@ import Carrousel from './carousel';
 import CardItem from './card';
 import FooterHome from './footer';
 import InfoHome from './info';
+import ModalIntroHome from './modalIntro';
 
 export default function Home() {
     const { setProgresso } = useProgresso();
@@ -72,6 +74,7 @@ export default function Home() {
                 <NavBar />
             </FadeNavBar>
             <Container fluid>
+                <ModalIntroHome />
                 <Notification />
                 <Carregando />
                 <FadeCarrousel>
@@ -105,6 +108,17 @@ export default function Home() {
                             </Alert>
                     }
                 </div>
+                <h5 style={{marginTop:'5vh', textAlign:'center', color:'blue'}}><ContactSupportIcon /> Precisa de ajuda para efetuar sua compra? Acesse o vídeo abaixo para entender melhor!</h5>
+                <Row className="justify-content-center">
+                    <iframe style={{
+                        width: '70%',
+                        height: '40vh',
+                        borderRadius: 10,
+                        marginBottom: '15vh',
+                        marginTop: '5vh',
+                        allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    }} src="https://www.youtube.com/embed/-3s_YFDXHNY" />
+                </Row>
                 <Card>
                     <Card.Body style={{ opacity: 0.8, backgroundRepeat: 'no-repeat', backgroundSize: '100vw', backgroundImage: 'url("https://i.ibb.co/8m40M4w/64747668-2874961069394995-8285739337077751808-n.png")' }}>
                         <Row className="justify-content-center">
