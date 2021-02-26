@@ -11,6 +11,7 @@ import {
     Table
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import imgbbUploader from 'imgbb-uploader';
 import Carregando from "../../../components/progress/carregando";
 import { useProgresso } from "../../../contexts/prog";
 import Notification from "../../../components/notification/notification";
@@ -71,6 +72,24 @@ export default function CreateIten({ dado }) {
         setAbrir(true);
     }
 
+    async function addImagem(file) {
+
+        await setProgresso(true);
+        const fileReader = new FileReader();
+        fileReader.onloadend = async function(){
+            const divisaoBase64 = (fileReader.result).split("base64,");
+            const options = {
+                apiKey: process.env.REACT_APP_API_IMG_KEY_NUTRIJACQUETHEDIM,  
+                base64string: divisaoBase64[1]
+              };
+              
+            await imgbbUploader(options).then((response) => setFotoCapa(response.url))
+            .catch((error) => notificacaoItem(`Tivemos um problema: Servidor de imagem apresenta problemas!`, 'danger'))
+            await setProgresso(false);
+        }
+        fileReader.readAsDataURL(file);
+    }
+
     async function cadastrarItem() {
         if(validaCampoText([fotoCapa,nome,preco,linkPagamento,descricao])){
             const item = {
@@ -95,7 +114,7 @@ export default function CreateIten({ dado }) {
                         notificacaoItem(`Tivemos um problema: ${error}.`, 'danger');
                     }
                 } catch (error) {
-                    notificacaoItem(`Tivemos um problema: Servidor indisponivel!`, 'danger');   
+                    notificacaoItem(`Tivemos um problema: Servidor indisponivel!`, 'danger');
                 }
             });
             await setProgresso(false);
@@ -243,6 +262,7 @@ export default function CreateIten({ dado }) {
                         <Form.Group controlId="fotocapa">
                             <Form.Label>Link Foto:</Form.Label>
                             <Form.Control placeholder="Exemplo: https://google.fotos/minhaimagem" onChange={(event) => setFotoCapa(event.target.value)} value={fotoCapa}/>
+                            <Form.File style={{marginTop:10, color:'blue'}} type="file" accept="image/*" onChange={(event) => addImagem(event.target.files[0])}/>
                         </Form.Group>
                         <Form.Group controlId="nome">
                             <Form.Label>Nome:</Form.Label>
