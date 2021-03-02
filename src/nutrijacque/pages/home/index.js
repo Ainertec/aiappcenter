@@ -117,7 +117,7 @@ export default function Home() {
                         marginBottom: '15vh',
                         marginTop: '5vh',
                         allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    }} src="https://www.youtube.com/embed/-3s_YFDXHNY" />
+                    }} src="https://www.youtube.com/embed/-Nb8Ah8JuRg" />
                 </Row>
                 <Card>
                     <Card.Body style={{ opacity: 0.8, backgroundRepeat: 'no-repeat', backgroundSize: '100vw', backgroundImage: 'url("https://i.ibb.co/8m40M4w/64747668-2874961069394995-8285739337077751808-n.png")' }}>
